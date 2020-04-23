@@ -14,10 +14,17 @@ Write a REST API that tracks jogging times of users
 - Example -> (date eq '2016-05-01') AND ((distance gt 20) OR (distance lt 10)).
 - Write unit and e2e tests.
 
+# Running
+
+with docker:
+``` 
+docker-compose up -d --build
+```
+
 # TODO List
 
-- [X] Create Django project
-- [ ] Docker
+- [x] Create Django project
+- [x] Docker
 - [ ] Create Models
   - [ ] User
   - [ ] Activity
