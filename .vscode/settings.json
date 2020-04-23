@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": true,
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "95"
+    ],
+    "python.formatting.provider": "black",
+    "python.pythonPath": "~/.cache/pypoetry/virtualenvs/jogging-tracker-2utJLtrG-py3.6"
+}

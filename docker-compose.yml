@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   joggingtracker:
-    image: joggingtracker:latest
+    image: joggingtracker
     build:
       context: .
       dockerfile: Dockerfile
