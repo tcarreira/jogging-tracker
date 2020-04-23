@@ -16,7 +16,8 @@ Write a REST API that tracks jogging times of users
 
 # TODO List
 
-- [ ] Create Django project
+- [X] Create Django project
+- [ ] Docker
 - [ ] Create Models
   - [ ] User
   - [ ] Activity
