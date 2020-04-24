@@ -4,4 +4,8 @@ services:
   joggingtracker:
     volumes:
       - ./jogging_tracker:/app/jogging_tracker:ro
-    command: python manage.py runserver 0.0.0.0:8080
+      - ./api:/app/api:ro
+    command: bash -c "
+        python manage.py migrate
+        && python manage.py runserver 0.0.0.0:8080
+      "
