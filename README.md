@@ -26,13 +26,9 @@ docker-compose up -d --build
 - [x] Create Django project
 - [x] Docker
 - [ ] Create Models
-  - [ ] User
-  - [ ] Activity
-    - [ ] date
-    - [ ] distance
-    - [ ] time
-    - [ ] location
-    - [ ] weather
+  - [x] User (django)
+  - [x] Activity
+  - [x] Weather
   - [ ] Role (regular, manager, admin)
   - [ ] Permission ? (django builtins?)
 - [ ] CRUD 
