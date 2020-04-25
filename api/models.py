@@ -9,13 +9,11 @@ class User(AbstractUser):
             ("crud_users", "Can modify any User"),
         ]
 
-    pass
-
 
 class Activity(models.Model):
     class Meta:
         permissions = [
-            ("crud_others_activities", "Can change the any activity (owned by other user)"),
+            ("crud_others_activities", "Can change any activity (owned by other user)"),
         ]
 
     date = models.DateTimeField(null=True)
