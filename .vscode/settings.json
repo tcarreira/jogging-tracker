@@ -5,5 +5,8 @@
         "95"
     ],
     "python.formatting.provider": "black",
-    "python.pythonPath": "~/.cache/pypoetry/virtualenvs/jogging-tracker-2utJLtrG-py3.6"
+    "python.pythonPath": "~/.cache/pypoetry/virtualenvs/jogging-tracker-2utJLtrG-py3.6",
+    "python.linting.pylintArgs": [
+        "--load-plugins=pylint_django"
+    ]
 }
