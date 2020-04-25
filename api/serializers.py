@@ -20,6 +20,20 @@ class ActivitySerializer(serializers.ModelSerializer):
         )
 
 
+class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.RelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = "__all__"
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "groups",
+        )
+
+
 class WeatherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Weather

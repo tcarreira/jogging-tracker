@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Activity, Weather
-from .serializers import ActivitySerializer, WeatherSerializer
+from .models import Activity, User, Weather
+from .serializers import ActivitySerializer, WeatherSerializer, UserSerializer
 
 
 # Create your views here.
@@ -32,6 +32,17 @@ class ActivityViewSet(
     lookup_field = "id"
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
+
+
+class UserViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    lookup_field = "username"
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class WeatherViewSet(
