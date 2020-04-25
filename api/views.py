@@ -33,3 +33,13 @@ class ActivityViewSet(
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
 
+
+class WeatherViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    lookup_field = "title"
+    queryset = Weather.objects.all()
+    serializer_class = WeatherSerializer

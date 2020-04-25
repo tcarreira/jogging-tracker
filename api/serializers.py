@@ -19,3 +19,12 @@ class ActivitySerializer(serializers.ModelSerializer):
             "weather",
         )
 
+
+class WeatherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Weather
+        fields = (
+            "id",
+            "title",
+            "description",
+        )

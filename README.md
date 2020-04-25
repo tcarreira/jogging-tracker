@@ -44,12 +44,13 @@ $ curl "http://localhost:8080/api/v1/auth/logout" -H 'Authorization: token 4a194
   - [ ] Role (regular, manager, admin)
   - [ ] Permission ? (django builtins?)
 - [ ] CRUD 
-  - [ ] Activities
+  - [x] Activities
+  - [x] Weather
   - [ ] Users
 - [ ] Unit testing
 - [ ] REST API
   - [ ] CRUD User
-  - [ ] CRUD Activity (simple version)
+  - [x] CRUD Activity (simple version)
 - [ ] Integration testing
 - [ ] Authentication & Authorization
   - [x] Authentication

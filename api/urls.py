@@ -7,6 +7,7 @@ from . import views
 
 router = SimpleRouter(trailing_slash=False)
 router.register("activities", views.ActivityViewSet)
+router.register("weather", views.WeatherViewSet)
 
 
 urlpatterns = [
