@@ -23,6 +23,9 @@ class Activity(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
+    def __str__(self):
+        return "{}: {} - {}".format(self.user, self.date, self.distance)
+
 
 class Weather(models.Model):
     id = models.AutoField(primary_key=True)
