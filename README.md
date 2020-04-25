@@ -21,6 +21,18 @@ with docker:
 docker-compose up -d --build
 ```
 
+## Login/Logout
+
+```
+# Login
+$ curl "http://localhost:8080/api/v1/auth/login" -H 'Content-Type: application/json' -d '{"username":"myuser","password":"secretpass"}'
+{"token":"4a1942e8a9886b1d83b5315113186abceed7ee2b"}
+
+# Logout
+$ curl "http://localhost:8080/api/v1/auth/logout" -H 'Authorization: token 4a1942e8a9886b1d83b5315113186abceed7ee2b'
+
+```
+
 # TODO List
 
 - [x] Create Django project
@@ -40,7 +52,7 @@ docker-compose up -d --build
   - [ ] CRUD Activity (simple version)
 - [ ] Integration testing
 - [ ] Authentication & Authorization
-  - [ ] Authentication
+  - [x] Authentication
   - [ ] Authorization
   - [ ] Roles & Permissions
 - [ ] Weather API connector
