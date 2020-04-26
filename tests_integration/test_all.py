@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.test import TestCase
-
 from django.utils import timezone
 from rest_framework import status
+
 from api.models import Activity, User, Weather
 
 BASE_API = "/api/v1/"
@@ -60,4 +61,69 @@ class TestAll(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "token")
-        # myuser_token = response.data["token"]
+        myuser_token = response.data["token"]
+
+        ###############################################
+        # Add activity (XXX: hard codeded weather for now)
+        this_now = timezone.now()
+        response = self.client.post(
+            BASE_API + "activities",
+            data={
+                "distance": 2,
+                "latitude": 2,
+                "longitude": 2,
+                "date": this_now,
+                "weather": "abc",
+                "user": "myuser",
+            },
+            format="json",
+            HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertDictEqual(
+            response.data,
+            {
+                "id": 2,
+                "distance": 2,
+                "latitude": "2.000000",
+                "longitude": "2.000000",
+                "date": this_now.strftime(settings.API_DATETIME_FORMAT),
+                "weather": "abc",
+                "user": "myuser",
+            },
+        )
+
+        ###############################################
+        # Get user's activities
+        this_now = timezone.now()
+        response = self.client.get(
+            BASE_API + "activities", HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)  # Got Only one result
+        self.assertDictEqual(
+            dict(response.data[0]),
+            {
+                "id": 2,
+                "distance": 2,
+                "latitude": "2.000000",
+                "longitude": "2.000000",
+                "date": this_now.strftime(settings.API_DATETIME_FORMAT),
+                "weather": "abc",
+                "user": "myuser",
+            },
+        )
+
+        # ###############################################
+        # # Get user's activities
+        # this_now = timezone.now()
+        # response = self.client.get(
+        #     BASE_API + "activities", HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+        # )
+
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # self.assertEqual(1, len(response.data))
+        # print(response.data)
+        # self.assertFalse(True)
