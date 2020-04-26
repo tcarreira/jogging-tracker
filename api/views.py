@@ -46,6 +46,16 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def create(self, *args, **kwargs):
+        response = super(UserViewSet, self).create(self.request, *args, **kwargs)
+
+        if "password" in self.request.data and "username" in response.data:
+            user = User.objects.get(username=response.data["username"])
+            user.set_password(self.request.data["password"])
+            user.save()
+
+        return response
+
 
 class WeatherViewSet(
     mixins.CreateModelMixin,
