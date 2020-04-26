@@ -1,6 +1,7 @@
+from django.conf import settings
 from rest_framework import serializers
 
-from .models import Activity, Weather, User
+from .models import Activity, User, Weather
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -18,6 +19,12 @@ class ActivitySerializer(serializers.ModelSerializer):
             "user",
             "weather",
         )
+
+    def to_representation(self, instance):
+        representation = super(ActivitySerializer, self).to_representation(instance)
+
+        representation["date"] = instance.date.strftime(settings.API_DATETIME_FORMAT)
+        return representation
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -122,3 +122,6 @@ AUTH_USER_MODEL = "api.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication",],
 }
+
+
+API_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
