@@ -34,6 +34,10 @@ class ActivityViewSet(
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(user=user)
+
 
 class UserViewSet(
     mixins.CreateModelMixin,
