@@ -18,7 +18,7 @@ class TestAuthentication(TestCase):
     def test_login_and_logout(self):
         factory = APIRequestFactory()
         request = factory.post(
-            "/api/v1/login", {"username": "admin", "password": "adminpass"}, format="json"
+            "/api/v1/auth/login", {"username": "admin", "password": "adminpass"}, format="json"
         )
         response = obtain_auth_token(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -26,7 +26,9 @@ class TestAuthentication(TestCase):
 
         # Logout this token
         token = response.data["token"]
-        request = factory.get("/api/v1/logout", HTTP_AUTHORIZATION="Token {}".format(token))
+        request = factory.get(
+            "/api/v1/auth/logout", HTTP_AUTHORIZATION="Token {}".format(token)
+        )
         view = Logout.as_view()
         response = view(request)
 
