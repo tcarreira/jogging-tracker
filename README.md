@@ -42,23 +42,25 @@ $ curl "http://localhost:8080/api/v1/auth/logout" -H 'Authorization: token 4a194
   - [x] Activity
   - [x] Weather
   - [ ] Role (regular, manager, admin)
-  - [ ] Permission ? (django builtins?)
-- [ ] CRUD 
+  - [ ] Permissions
+    - [ ] Activities
+    - [x] Users
+- [x] CRUD 
   - [x] Activities
   - [x] Weather
-  - [ ] Users
-- [ ] Unit testing
-- [ ] REST API
-  - [ ] CRUD User
+  - [x] Users
+- [x] Unit testing (never ending task...)
+- [x] REST API
+  - [x] CRUD User
   - [x] CRUD Activity (simple version)
-- [ ] Integration testing
-- [ ] Authentication & Authorization
+- [x] Integration testing (never ending task...)
+- [x] Authentication & Authorization
   - [x] Authentication
-  - [ ] Authorization
-  - [ ] Roles & Permissions
+  - [x] Authorization
+  - [x] Roles & Permissions
 - [ ] Weather API connector
 - [ ] Filtering
-  - [ ] Simple filtering
+  - [x] Simple filtering
   - [ ] Pagination
   - [ ] Advanced filtering
 - [ ] Reports
