@@ -1,11 +1,15 @@
+from django.contrib.auth import logout
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .filter_backends import IsOwnerOrAdminFilterBackend
 from .models import Activity, User, Weather
-from .serializers import ActivitySerializer, WeatherSerializer, UserSerializer
+from .permissions import IsOwnerOrAdmin
+from .serializers import ActivitySerializer, UserSerializer, WeatherSerializer
 
 
 # Create your views here.
@@ -19,7 +23,16 @@ class Logout(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        request.user.auth_token.delete()
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist, AssertionError):
+            pass
+
+        try:
+            logout(request)
+        except (AttributeError, ObjectDoesNotExist, AssertionError):
+            pass
+
         return Response(status=status.HTTP_200_OK)
 
 
@@ -33,10 +46,8 @@ class ActivityViewSet(
     lookup_field = "id"
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return self.queryset.filter(user=user)
+    permission_classes = (IsAuthenticated, IsOwnerOrAdmin)
+    filter_backends = (IsOwnerOrAdminFilterBackend,)
 
 
 class UserViewSet(
