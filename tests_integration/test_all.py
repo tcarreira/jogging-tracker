@@ -13,9 +13,7 @@ class TestAll(TestCase):
     "Test specific/complete workflows"
 
     def setUp(self):
-        user = User.objects.create_superuser(username="admin")
-        user.set_password("adminpass")
-        user.save()
+        user = User.objects.create_superuser(username="admin", password="adminpass")
 
         weather = Weather.objects.create(title="abc", description="abc")
         Activity.objects.create(
@@ -120,14 +118,12 @@ class TestAll(TestCase):
             },
         )
 
-        # ###############################################
-        # # Get user's activities
-        # this_now = timezone.now()
-        # response = self.client.get(
-        #     BASE_API + "activities", HTTP_AUTHORIZATION="Token {}".format(myuser_token),
-        # )
+        ###############################################
+        # Get user's activities
+        this_now = timezone.now()
+        response = self.client.get(
+            BASE_API + "activities", HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+        )
 
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertEqual(1, len(response.data))
-        # print(response.data)
-        # self.assertFalse(True)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data))
