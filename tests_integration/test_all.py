@@ -1,3 +1,4 @@
+"Integration tests for testing workflows and all"
 from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
@@ -9,6 +10,8 @@ BASE_API = "/api/v1/"
 
 
 class TestAll(TestCase):
+    "Test specific/complete workflows"
+
     def setUp(self):
         user = User.objects.create_superuser(username="admin")
         user.set_password("adminpass")
@@ -25,6 +28,7 @@ class TestAll(TestCase):
         )
 
     def test_case1(self):
+        "test complete flow"
         #####################################################################
         # Login with admin user
         response = self.client.post(
