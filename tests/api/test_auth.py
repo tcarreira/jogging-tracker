@@ -36,6 +36,9 @@ class TestAuthentication(TestCase):
         self.assertIsNone(response.data)
 
         # Retry same token and fails as unauthorized
+        request = factory.get(
+            "/api/v1/auth/logout", HTTP_AUTHORIZATION="Token {}".format(token)
+        )
         view = Logout.as_view()
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
