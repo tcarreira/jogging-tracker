@@ -20,7 +20,6 @@ with docker:
 ``` 
 docker-compose up -d --build
 ```
-
 ## Login/Logout
 
 ```
@@ -32,6 +31,14 @@ $ curl "http://localhost:8080/api/v1/auth/login" -H 'Content-Type: application/j
 $ curl "http://localhost:8080/api/v1/auth/logout" -H 'Authorization: token 4a1942e8a9886b1d83b5315113186abceed7ee2b'
 
 ```
+
+
+# Testing
+
+Unit testing: `pytest tests`
+
+Integration tests: `pytest tests_integration`
+
 
 # TODO List
 
@@ -65,3 +72,14 @@ $ curl "http://localhost:8080/api/v1/auth/logout" -H 'Authorization: token 4a194
   - [ ] Advanced filtering
 - [ ] Reports
   - [ ] Average speed + Total distance / week
+
+
+## Dev notes
+
+1. Could be using GIS on Spacial context (Activity coordinates), but there is just too much complexity for this exercise.
+   1. must use geo-django
+   2. postgresql must support postgis
+   3. tests must start using SpaciaLite (dev system dependency outside python env)
+   4. must install extra packages on Docker container
+   5. more complexity
+   
