@@ -82,4 +82,15 @@ Integration tests: `pytest tests_integration`
    3. tests must start using SpaciaLite (dev system dependency outside python env)
    4. must install extra packages on Docker container
    5. more complexity
-   
+2. Requests to external API should be handled assyncronously when possible.
+   1. An external request is slow
+   2. an external API service may be temporarily down, have performance issues, change the API
+   3. for non-critical data (such as the weather), it could be async-fetched 
+   4. I will NOT implement it in this project because it's out of the scope, but I would go for something like this:
+      1. Install celery for handling async tasks:
+         1. add software dependencies
+         2. add queueing service (redis/rabbitmq/...)
+         3. add celery beat service
+         4. add celery worker
+      2. when creating a new activity, create a new task for consuming the external API for getting the weather. 
+      3. task would fetch data and update activity with it
