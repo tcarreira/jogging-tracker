@@ -55,22 +55,28 @@ class TestActivities(TestCase):
 
         response = self.client.get("/api/v1/activities",)
 
-        self.assertEqual(len(response.data), 2)
+        self.assertTrue("results" in response.data)
+        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
     def test_get_activity_with_null_weather(self):
         self.assertTrue(self.client.login(username="user3", password="123456"))
 
         response = self.client.get("/api/v1/activities",)
 
-        self.assertEqual(len(response.data), 1)
-        self.assertIsNone(response.data[0]["weather"])
+        self.assertTrue("results" in response.data)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertIsNone(response.data["results"][0]["weather"])
 
     def test_get_all_activities_from_admin(self):
         self.assertTrue(self.client.login(username="useradmin", password="123456"))
 
         response = self.client.get("/api/v1/activities",)
 
-        self.assertEqual(len(response.data), 5)
+        self.assertTrue("results" in response.data)
+        self.assertEqual(response.data["count"], 5)
+        self.assertEqual(len(response.data["results"]), 5)
 
     def test_access_to_own_activity(self):
         self.assertTrue(self.client.login(username="user1", password="123456"))

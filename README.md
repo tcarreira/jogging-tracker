@@ -68,7 +68,7 @@ Integration tests: `pytest tests_integration`
 - [x] Weather API connector
 - [ ] Filtering
   - [x] Simple filtering
-  - [ ] Pagination
+  - [x] Pagination
   - [ ] Advanced filtering
 - [ ] Reports
   - [ ] Average speed + Total distance / week

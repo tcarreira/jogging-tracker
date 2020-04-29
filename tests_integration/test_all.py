@@ -113,9 +113,11 @@ class TestAll(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)  # Got Only one result
+        self.assertTrue("results" in response.data)
+        self.assertEqual(len(response.data["results"]), 1)  # Got Only one result
+        self.assertEqual(response.data["count"], 1)  # Got Only one result
         self.assertDictEqual(
-            dict(response.data[0]),
+            dict(response.data["results"][0]),
             {
                 "id": 2,
                 "distance": 20,
@@ -127,12 +129,69 @@ class TestAll(TestCase):
             },
         )
 
-        ###############################################
-        # Get user's activities
-        this_now = timezone.now()
-        response = self.client.get(
-            BASE_API + "activities", HTTP_AUTHORIZATION="Token {}".format(myuser_token),
-        )
+
+class TestActivityPagination(TestCase):
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def test_pagination(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 100,
+            "title": "SomeWeather",
+            "description": "Weeeeaaaaather",
+        }
+
+        user = User.objects.create_user(username="myuser", password="xxx")
+        results_count = 47
+        results_per_page = settings.REST_FRAMEWORK["PAGE_SIZE"]
+        for i in range(results_count):
+            Activity.objects.create(
+                date="2020-01-01T00:01:{:02d}Z".format(i),
+                distance=i,
+                user=user,
+                latitude=0,
+                longitude=0,
+            )
+
+        self.assertTrue(self.client.login(username="myuser", password="xxx"))
+
+        response = self.client.get("/api/v1/activities",)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
+        self.assertEqual(len(response.data["results"]), results_per_page)
+        self.assertEqual(response.data["count"], results_count)
+
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def test_pagination_page_size(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 100,
+            "title": "SomeWeather",
+            "description": "Weeeeaaaaather",
+        }
+
+        user = User.objects.create_user(username="myuser", password="xxx")
+        results_count = 50
+        results_per_page = 30
+        for i in range(results_count):
+            Activity.objects.create(
+                date="2020-01-01T00:{:02d}:{:02d}Z".format(int(i / 60), i % 60),
+                distance=i,
+                user=user,
+                latitude=0,
+                longitude=0,
+            )
+
+        self.assertTrue(self.client.login(username="myuser", password="xxx"))
+
+        response = self.client.get(f"/api/v1/activities?limit={results_per_page}",)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data["results"]), results_per_page)
+        self.assertEqual(response.data["count"], results_count)
+
+        response = self.client.get(
+            f"/api/v1/activities?limit={results_per_page}&offset=30",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            len(response.data["results"]), results_count - results_per_page
+        )
+        self.assertEqual(response.data["count"], results_count)
