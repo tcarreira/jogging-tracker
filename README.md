@@ -50,8 +50,8 @@ Integration tests: `pytest tests_integration`
   - [x] Weather
   - [ ] Role (regular, manager, admin)
   - [ ] Permissions
-    - [ ] Activities
-    - [x] Users
+    - [x] Activities
+    - [ ] Users
 - [x] CRUD 
   - [x] Activities
   - [x] Weather

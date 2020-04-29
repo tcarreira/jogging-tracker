@@ -8,18 +8,10 @@ from .external_sources import WeatherProvider
 
 
 class User(AbstractUser):
-    class Meta:
-        permissions = [
-            ("crud_users", "Can modify any User"),
-        ]
+    pass
 
 
 class Activity(models.Model):
-    class Meta:
-        permissions = [
-            ("crud_others_activities", "Can change any activity (owned by other user)"),
-        ]
-
     date = models.DateTimeField(null=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
