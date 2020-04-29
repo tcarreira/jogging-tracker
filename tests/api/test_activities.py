@@ -20,6 +20,7 @@ class TestActivities(TestCase):
             User.objects.create_user(username="user1", password="123456"),
             User.objects.create_user(username="user2", password="123456"),
             User.objects.create_superuser(username="useradmin", password="123456"),
+            User.objects.create_user(username="user3", password="123456"),
         ]
 
         activity_common = {
@@ -30,7 +31,9 @@ class TestActivities(TestCase):
 
         self.this_now = timezone.now()
 
-        a = Activity.objects.create(date=self.this_now, user=users[0], **activity_common,)
+        a = Activity.objects.create(
+            date=self.this_now, user=users[0], **activity_common,
+        )
         Activity.objects.create(
             date=self.this_now, user=users[0], **activity_common,
         )
@@ -41,6 +44,12 @@ class TestActivities(TestCase):
             date=self.this_now, user=users[2], **activity_common,
         )
 
+        # this activity will have weather=None
+        mock_get_weather.return_value = None
+        Activity.objects.create(
+            date=self.this_now, user=users[3], **activity_common,
+        )
+
     def test_get_only_own_activities(self):
         self.assertTrue(self.client.login(username="user1", password="123456"))
 
@@ -48,12 +57,20 @@ class TestActivities(TestCase):
 
         self.assertEqual(len(response.data), 2)
 
+    def test_get_activity_with_null_weather(self):
+        self.assertTrue(self.client.login(username="user3", password="123456"))
+
+        response = self.client.get("/api/v1/activities",)
+
+        self.assertEqual(len(response.data), 1)
+        self.assertIsNone(response.data[0]["weather"])
+
     def test_get_all_activities_from_admin(self):
         self.assertTrue(self.client.login(username="useradmin", password="123456"))
 
         response = self.client.get("/api/v1/activities",)
 
-        self.assertEqual(len(response.data), 4)
+        self.assertEqual(len(response.data), 5)
 
     def test_access_to_own_activity(self):
         self.assertTrue(self.client.login(username="user1", password="123456"))
