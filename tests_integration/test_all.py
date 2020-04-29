@@ -1,4 +1,6 @@
 "Integration tests for testing workflows and all"
+from unittest import mock
+
 from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
@@ -12,21 +14,28 @@ BASE_API = "/api/v1/"
 class TestAll(TestCase):
     "Test specific/complete workflows"
 
-    def setUp(self):
+    @mock.patch("pyowm.commons.http_client.HttpClient.cacheable_get_json")
+    def setUp(self, mock_get_json):
+
+        # Mock external API
+        owm_stub_response_json = '{"coord":{"lon":20,"lat":15},"weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04n"}],"base":"stations","main":{"temp":307.82,"feels_like":302.39,"temp_min":307.82,"temp_max":307.82,"pressure":1006,"humidity":9,"sea_level":1006,"grnd_level":963},"wind":{"speed":4.37,"deg":26},"clouds":{"all":53},"dt":1588101568,"sys":{"country":"TD","sunrise":1588047487,"sunset":1588092991},"timezone":3600,"id":2434508,"name":"Chad","cod":200}'
+        mock_get_json.return_value = (None, owm_stub_response_json)
+
         user = User.objects.create_superuser(username="admin", password="adminpass")
 
-        weather = Weather.objects.create(title="abc", description="abc")
+        self.nowdate = timezone.now()
         Activity.objects.create(
-            distance=2,
-            latitude=2,
-            longitude=2,
-            date=timezone.now(),
-            weather=weather,
-            user=user,
+            distance=20, latitude=30, longitude=40, date=self.nowdate, user=user,
         )
 
-    def test_case1(self):
+    @mock.patch("pyowm.commons.http_client.HttpClient.cacheable_get_json")
+    def test_case1(self, mock_get_json):
         "test complete flow"
+
+        # Mock external API
+        owm_stub_response_json = '{"coord":{"lon":20,"lat":15},"weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04n"}],"base":"stations","main":{"temp":307.82,"feels_like":302.39,"temp_min":307.82,"temp_max":307.82,"pressure":1006,"humidity":9,"sea_level":1006,"grnd_level":963},"wind":{"speed":4.37,"deg":26},"clouds":{"all":53},"dt":1588101568,"sys":{"country":"TD","sunrise":1588047487,"sunset":1588092991},"timezone":3600,"id":2434508,"name":"Chad","cod":200}'
+        mock_get_json.return_value = (None, owm_stub_response_json)
+
         #####################################################################
         # Login with admin user
         response = self.client.post(
@@ -71,30 +80,30 @@ class TestAll(TestCase):
         response = self.client.post(
             BASE_API + "activities",
             data={
-                "distance": 2,
-                "latitude": 2,
-                "longitude": 2,
+                "distance": 20,
+                "latitude": 30.0,
+                "longitude": 40.0,
                 "date": this_now,
-                "weather": "abc",
                 "user": "myuser",
             },
             format="json",
             HTTP_AUTHORIZATION="Token {}".format(myuser_token),
         )
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertDictEqual(
-            response.data,
-            {
-                "id": 2,
-                "distance": 2,
-                "latitude": "2.000000",
-                "longitude": "2.000000",
-                "date": this_now.strftime(settings.API_DATETIME_FORMAT),
-                "weather": "abc",
-                "user": "myuser",
-            },
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+            "Got: " + str(response.content),
         )
+        self.assertEqual(response.data["id"], 2)
+        self.assertEqual(response.data["distance"], 20)
+        self.assertEqual(response.data["latitude"], 30.0)
+        self.assertEqual(response.data["longitude"], 40.0)
+        self.assertEqual(
+            response.data["date"], this_now.strftime(settings.API_DATETIME_FORMAT)
+        )
+        self.assertEqual(response.data["weather"], "Clouds")
+        self.assertEqual(response.data["user"], "myuser")
 
         ###############################################
         # Get user's activities
@@ -109,11 +118,11 @@ class TestAll(TestCase):
             dict(response.data[0]),
             {
                 "id": 2,
-                "distance": 2,
-                "latitude": "2.000000",
-                "longitude": "2.000000",
+                "distance": 20,
+                "latitude": 30.0,
+                "longitude": 40.0,
                 "date": this_now.strftime(settings.API_DATETIME_FORMAT),
-                "weather": "abc",
+                "weather": "Clouds",
                 "user": "myuser",
             },
         )

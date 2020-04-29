@@ -65,7 +65,7 @@ Integration tests: `pytest tests_integration`
   - [x] Authentication
   - [x] Authorization
   - [x] Roles & Permissions
-- [ ] Weather API connector
+- [x] Weather API connector
 - [ ] Filtering
   - [x] Simple filtering
   - [ ] Pagination
