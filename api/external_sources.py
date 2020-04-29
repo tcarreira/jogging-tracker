@@ -1,9 +1,12 @@
 "This handles extracting data from external services / APIs"
 import abc
+import logging
 from typing import Optional, TypedDict
 
 import pyowm
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 class WeatherDict(TypedDict):
@@ -46,6 +49,7 @@ class OpenWeatherMapProvider(AbstractWeatherProvider):
                 }
             )
         except Exception as e:  # pylint: disable=broad-except
+            logging.error("Got exception from OpenWeatherMapProvider: %s", str(e))
             if not quiet_fail:
                 raise e
 
