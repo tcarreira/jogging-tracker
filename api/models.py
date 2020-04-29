@@ -44,7 +44,9 @@ class Activity(models.Model):
             weather_dict = WeatherProvider().getWeather(
                 float(self.latitude), float(self.longitude)
             )
-            weather = Weather.get_or_create(**weather_dict)
+            weather = (
+                None if weather_dict is None else Weather.get_or_create(**weather_dict)
+            )
             self.weather = weather
 
         elif "form" in kwargs and (
