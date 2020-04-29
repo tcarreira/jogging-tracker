@@ -5,6 +5,8 @@ services:
     volumes:
       - ./jogging_tracker:/app/jogging_tracker:ro
       - ./api:/app/api:ro
+    env_file:
+      - .env
     command: bash -c "
         python manage.py migrate
         && python manage.py runserver 0.0.0.0:8080

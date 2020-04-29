@@ -4,3 +4,4 @@ htmlcov
 .coverage
 .vscode/.ropeproject/objectdb
 .mypy_cache
+.env
