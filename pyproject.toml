@@ -5,7 +5,7 @@ description = "REST API that tracks jogging times of users"
 authors = ["Tiago Carreira <tiago.g.carreira+git@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 django = "^3.0.5"
 gunicorn = "^20.0.4"
 djangorestframework = "^3.11.0"

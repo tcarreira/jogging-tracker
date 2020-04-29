@@ -2,20 +2,17 @@
     "editor.formatOnSave": true,
     "python.formatting.blackArgs": [
         "--line-length",
-        "95"
+        "88"
     ],
     "python.formatting.provider": "black",
-    "python.pythonPath": "~/.cache/pypoetry/virtualenvs/jogging-tracker-2utJLtrG-py3.6",
-    "python.linting.pylintArgs": [
-        "--load-plugins=pylint_django"
-    ],
+    "python.linting.enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "~/.cache/pypoetry/virtualenvs/jogging-tracker-2utJLtrG-py3.8",
+    "python.testing.nosetestsEnabled": false,
     "python.testing.pytestArgs": [
         "tests"
     ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.linting.mypyEnabled": true,
-    "python.linting.enabled": true
+    "python.testing.unittestEnabled": false
 }
