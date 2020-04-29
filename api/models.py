@@ -21,11 +21,19 @@ class Activity(models.Model):
         ]
 
     date = models.DateTimeField(null=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
+    )
     distance = models.PositiveIntegerField(null=False)
-    weather = models.ForeignKey("Weather", null=True, on_delete=models.DO_NOTHING)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    weather = models.ForeignKey(
+        "Weather", null=True, blank=True, on_delete=models.DO_NOTHING
+    )
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
 
     def __str__(self):
         return "{}: {} - {}".format(self.user, self.date, self.distance)

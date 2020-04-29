@@ -5,8 +5,12 @@ from .models import Activity, User, Weather
 
 
 class ActivitySerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field="username")
-    weather = serializers.SlugRelatedField(queryset=Weather.objects.all(), slug_field="title")
+    user = serializers.SlugRelatedField(
+        queryset=User.objects.all(), slug_field="username"
+    )
+    weather = serializers.SlugRelatedField(read_only=True, slug_field="title")
+    latitude = serializers.FloatField(required=False)
+    longitude = serializers.FloatField(required=False)
 
     class Meta:
         model = Activity
