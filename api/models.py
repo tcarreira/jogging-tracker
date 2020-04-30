@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 
 from django.conf import settings
@@ -7,8 +8,20 @@ from django.db import models
 from .external_sources import WeatherProvider
 
 
+class UserRoles(Enum):
+    ADMIN = 1
+    MANAGER = 2
+    REGULAR = 3
+
+    @classmethod
+    def as_choices(cls):
+        return ((x.value, x.name) for x in cls)
+
+
 class User(AbstractUser):
-    pass
+    role = models.PositiveSmallIntegerField(
+        choices=UserRoles.as_choices(), default=UserRoles.REGULAR.value
+    )
 
 
 class Activity(models.Model):
