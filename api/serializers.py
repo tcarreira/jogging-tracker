@@ -32,8 +32,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    groups = serializers.RelatedField(many=True, read_only=True)
-
     class Meta:
         model = User
         fields = "__all__"
@@ -41,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
-            "groups",
+            "role",
         )
 
 

@@ -48,10 +48,10 @@ Integration tests: `pytest tests_integration`
   - [x] User (django)
   - [x] Activity
   - [x] Weather
-  - [ ] Role (regular, manager, admin)
-  - [ ] Permissions
+  - [x] Role (regular, manager, admin)
+  - [x] Permissions
     - [x] Activities
-    - [ ] Users
+    - [x] Users
 - [x] CRUD 
   - [x] Activities
   - [x] Weather
