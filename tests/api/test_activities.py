@@ -19,7 +19,9 @@ class TestActivities(TestCase):
         users = [
             User.objects.create_user(username="user1", password="123456"),
             User.objects.create_user(username="user2", password="123456"),
-            User.objects.create_superuser(username="useradmin", password="123456"),
+            User.objects.create_superuser(
+                username="useradmin", email=None, password="123456"
+            ),
             User.objects.create_user(username="user3", password="123456"),
         ]
 

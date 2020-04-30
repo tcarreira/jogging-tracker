@@ -21,7 +21,9 @@ class TestAll(TestCase):
         owm_stub_response_json = '{"coord":{"lon":20,"lat":15},"weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04n"}],"base":"stations","main":{"temp":307.82,"feels_like":302.39,"temp_min":307.82,"temp_max":307.82,"pressure":1006,"humidity":9,"sea_level":1006,"grnd_level":963},"wind":{"speed":4.37,"deg":26},"clouds":{"all":53},"dt":1588101568,"sys":{"country":"TD","sunrise":1588047487,"sunset":1588092991},"timezone":3600,"id":2434508,"name":"Chad","cod":200}'
         mock_get_json.return_value = (None, owm_stub_response_json)
 
-        user = User.objects.create_superuser(username="admin", password="adminpass")
+        user = User.objects.create_superuser(
+            username="admin", email="", password="adminpass"
+        )
 
         self.nowdate = timezone.now()
         Activity.objects.create(
