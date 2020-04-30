@@ -6,9 +6,10 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filter_backends import IsOwnerOrAdminFilterBackend
+from .filter_backends import IsSelfOrAdminFilterBackend, IsOwnerOrManagerFilterBackend
+
 from .models import Activity, User, Weather
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsSelfOrAdmin, IsOwnerOrManager
 from .serializers import ActivitySerializer, UserSerializer, WeatherSerializer
 
 
@@ -46,8 +47,8 @@ class ActivityViewSet(
     lookup_field = "id"
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrAdmin)
-    filter_backends = (IsOwnerOrAdminFilterBackend,)
+    permission_classes = (IsAuthenticated, IsOwnerOrManager)
+    filter_backends = (IsOwnerOrManagerFilterBackend,)
 
 
 class UserViewSet(
@@ -60,6 +61,8 @@ class UserViewSet(
     lookup_field = "username"
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated, IsSelfOrAdmin)
+    filter_backends = (IsSelfOrAdminFilterBackend,)
 
     def create(self, *args, **kwargs):
         response = super(UserViewSet, self).create(self.request, *args, **kwargs)

@@ -1,5 +1,7 @@
 from rest_framework import permissions
 
+from .models import UserRoles
+
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -18,14 +20,36 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class IsOwnerOrAdmin(permissions.BasePermission):
+class IsSelfOrAdmin(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
     Assumes the model instance has an `owner` attribute.
     """
 
     def has_object_permission(self, request, view, obj):
-        if bool(request.user and request.user.is_staff):
+        if bool(
+            request.user
+            and (request.user.is_superuser or request.user.role in [UserRoles.ADMIN])
+        ):
+            return True
+
+        return obj.user == request.user
+
+
+class IsOwnerOrManager(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if bool(
+            request.user
+            and (
+                request.user.is_superuser
+                or request.user.role in [UserRoles.MANAGER, UserRoles.ADMIN]
+            )
+        ):
             return True
 
         return obj.user == request.user
