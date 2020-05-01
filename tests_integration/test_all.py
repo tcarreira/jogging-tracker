@@ -4,6 +4,7 @@ from unittest import mock
 from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.http import urlquote_plus
 from rest_framework import status
 
 from api.models import Activity, User, Weather
@@ -77,7 +78,7 @@ class TestAll(TestCase):
         myuser_token = response.data["token"]
 
         ###############################################
-        # Add activity (XXX: hard codeded weather for now)
+        # Add activity
         this_now = timezone.now()
         response = self.client.post(
             BASE_API + "activities",
@@ -197,3 +198,48 @@ class TestActivityPagination(TestCase):
             len(response.data["results"]), results_count - results_per_page
         )
         self.assertEqual(response.data["count"], results_count)
+
+
+class TestAdvancedFilters(TestCase):
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def setUp(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 100,
+            "title": "SomeWeather",
+            "description": "Weeeeaaaaather",
+        }
+
+        user = User.objects.create_user(username="myuser", password="xxx")
+        results_count = 50
+        results_per_page = 30
+        for i in range(results_count):
+            Activity.objects.create(
+                date="2020-{:02d}-{:02d}T00:{:02d}:{:02d}Z".format(
+                    int(i / 27) + 1, (i % 27) + 1, int(i / 60), i % 60
+                ),
+                distance=i,
+                user=user,
+                latitude=0,
+                longitude=0,
+            )
+
+        self.assertTrue(self.client.login(username="myuser", password="xxx"))
+
+    def test_advanced_filters_simple(self):
+        response = self.client.get(
+            "/api/v1/activities?q=" + urlquote_plus("distance lt 30")
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 30)
+
+    def test_advanced_filters_more_complex(self):
+        response = self.client.get(
+            "/api/v1/activities?q="
+            + urlquote_plus(
+                "( (distance lt 30) AND (distance gt 10) ) OR distance gte 45"
+            )
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 24)  # 11-29 + 45-49 -> 19+5

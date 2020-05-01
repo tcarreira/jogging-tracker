@@ -44,7 +44,7 @@ Integration tests: `pytest tests_integration`
 
 - [x] Create Django project
 - [x] Docker
-- [ ] Create Models
+- [x] Create Models
   - [x] User (django)
   - [x] Activity
   - [x] Weather
@@ -66,12 +66,16 @@ Integration tests: `pytest tests_integration`
   - [x] Authorization
   - [x] Roles & Permissions
 - [x] Weather API connector
-- [ ] Filtering
+- [x] Filtering
   - [x] Simple filtering
   - [x] Pagination
-  - [ ] Advanced filtering
+  - [x] Advanced filtering
 - [ ] Reports
   - [ ] Average speed + Total distance / week
+- [ ] Revisions and manual tests
+- [ ] Get it Production ready
+- [ ] Deploy
+
 
 
 ## Dev notes
