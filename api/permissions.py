@@ -33,7 +33,7 @@ class IsSelfOrAdmin(permissions.BasePermission):
         ):
             return True
 
-        return obj.user == request.user
+        return obj == request.user
 
 
 class IsOwnerOrManager(permissions.BasePermission):
