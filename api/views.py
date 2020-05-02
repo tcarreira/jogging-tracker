@@ -26,7 +26,7 @@ def hello_world(request):
 
 
 class Logout(APIView):
-    """Add logout capabilities to rest_framework.authtoken"""
+    """Logout a User"""
 
     permission_classes = (IsAuthenticated,)
 
@@ -52,6 +52,30 @@ class ActivityViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
+
+    """
+    API endpoint that allows activities to be viewed or edited.
+
+    create:
+    Enpoint for creating an Activity 
+
+    retrieve:
+    Return an Activity instance
+
+    list:
+    Return owned Activities
+
+    update:
+    Update Activity instance
+
+    partial:
+    Update part of a Activity instance
+
+    destroy:
+    Delete Activity instance
+
+    """
+
     lookup_field = "id"
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
@@ -84,6 +108,30 @@ class UserViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
+
+    """
+    API endpoint that allows users to be viewed or edited.
+
+    create:
+    Enpoint for creating a User. Returns a User instance 
+
+    retrieve:
+    Return a User instance
+
+    list:
+    Return all users, ordered by most recently joined
+
+    update:
+    Update User instance
+
+    partial:
+    Update part of a User instance
+
+    destroy:
+    Delete User instance
+
+    """
+
     lookup_field = "username"
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -125,6 +173,18 @@ class UserViewSet(
 class WeatherViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet,
 ):
+
+    """
+    API endpoint that allows Weather to be viewed.
+
+    retrieve:
+    Return a Weather instance.
+
+    list:
+    Return all Weathers
+
+    """
+
     lookup_field = "title"
     queryset = Weather.objects.all()
     serializer_class = WeatherSerializer

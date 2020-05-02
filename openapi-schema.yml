@@ -7,7 +7,7 @@ paths:
   /api/v1/activities:
     get:
       operationId: listActivitys
-      description: ''
+      description: Return owned Activities
       parameters:
       - name: limit
         required: false
@@ -68,7 +68,7 @@ paths:
           description: ''
     post:
       operationId: createActivity
-      description: ''
+      description: Enpoint for creating an Activity
       parameters: []
       requestBody:
         content:
@@ -131,7 +131,7 @@ paths:
   /api/v1/activities/{id}:
     get:
       operationId: retrieveActivity
-      description: ''
+      description: Return an Activity instance
       parameters:
       - name: id
         in: path
@@ -172,7 +172,7 @@ paths:
           description: ''
     put:
       operationId: updateActivity
-      description: ''
+      description: Update Activity instance
       parameters:
       - name: id
         in: path
@@ -240,7 +240,7 @@ paths:
           description: ''
     patch:
       operationId: partial_updateActivity
-      description: ''
+      description: API endpoint that allows activities to be viewed or edited.
       parameters:
       - name: id
         in: path
@@ -302,10 +302,23 @@ paths:
                 - time
                 - distance
           description: ''
+    delete:
+      operationId: destroyActivity
+      description: Delete Activity instance
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this activity.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
   /api/v1/users:
     get:
       operationId: listUsers
-      description: ''
+      description: Return all users, ordered by most recently joined
       parameters:
       - name: limit
         required: false
@@ -361,7 +374,7 @@ paths:
           description: ''
     post:
       operationId: createUser
-      description: ''
+      description: Enpoint for creating a User. Returns a User instance
       parameters: []
       requestBody:
         content:
@@ -420,7 +433,7 @@ paths:
   /api/v1/users/{username}:
     get:
       operationId: retrieveUser
-      description: ''
+      description: Return a User instance
       parameters:
       - name: username
         in: path
@@ -457,7 +470,7 @@ paths:
           description: ''
     put:
       operationId: updateUser
-      description: ''
+      description: Update User instance
       parameters:
       - name: username
         in: path
@@ -522,7 +535,7 @@ paths:
           description: ''
     patch:
       operationId: partial_updateUser
-      description: ''
+      description: API endpoint that allows users to be viewed or edited.
       parameters:
       - name: username
         in: path
@@ -583,6 +596,20 @@ paths:
                 required:
                 - username
           description: ''
+    delete:
+      operationId: destroyUser
+      description: Delete User instance
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
   /api/v1/users/{username}/report:
     get:
       operationId: reportUser
@@ -624,7 +651,7 @@ paths:
   /api/v1/weather:
     get:
       operationId: listWeathers
-      description: ''
+      description: Return all Weathers
       parameters:
       - name: limit
         required: false
@@ -671,51 +698,10 @@ paths:
                       - title
                       - description
           description: ''
-    post:
-      operationId: createWeather
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema: &id007
-              properties:
-                title:
-                  type: string
-                  maxLength: 80
-                description:
-                  type: string
-                  maxLength: 254
-              required:
-              - title
-              - description
-          application/x-www-form-urlencoded:
-            schema: *id007
-          multipart/form-data:
-            schema: *id007
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  title:
-                    type: string
-                    maxLength: 80
-                  description:
-                    type: string
-                    maxLength: 254
-                required:
-                - title
-                - description
-          description: ''
   /api/v1/weather/{title}:
     get:
       operationId: retrieveWeather
-      description: ''
+      description: Return a Weather instance.
       parameters:
       - name: title
         in: path
@@ -723,97 +709,6 @@ paths:
         description: ''
         schema:
           type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  title:
-                    type: string
-                    maxLength: 80
-                  description:
-                    type: string
-                    maxLength: 254
-                required:
-                - title
-                - description
-          description: ''
-    put:
-      operationId: updateWeather
-      description: ''
-      parameters:
-      - name: title
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema: &id008
-              properties:
-                title:
-                  type: string
-                  maxLength: 80
-                description:
-                  type: string
-                  maxLength: 254
-              required:
-              - title
-              - description
-          application/x-www-form-urlencoded:
-            schema: *id008
-          multipart/form-data:
-            schema: *id008
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  title:
-                    type: string
-                    maxLength: 80
-                  description:
-                    type: string
-                    maxLength: 254
-                required:
-                - title
-                - description
-          description: ''
-    patch:
-      operationId: partial_updateWeather
-      description: ''
-      parameters:
-      - name: title
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema: &id009
-              properties:
-                title:
-                  type: string
-                  maxLength: 80
-                description:
-                  type: string
-                  maxLength: 254
-          application/x-www-form-urlencoded:
-            schema: *id009
-          multipart/form-data:
-            schema: *id009
       responses:
         '200':
           content:
@@ -836,7 +731,7 @@ paths:
   /api/v1/auth/logout:
     get:
       operationId: listLogouts
-      description: Add logout capabilities to rest_framework.authtoken
+      description: Logout a User
       parameters: []
       responses:
         '200':
