@@ -1,0 +1,859 @@
+openapi: 3.0.2
+info:
+  title: Jogging Tracker API
+  version: ''
+  description: REST API that tracks jogging times of users
+paths:
+  /api/v1/activities:
+    get:
+      operationId: listActivitys
+      description: ''
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        date:
+                          type: string
+                          format: date
+                        time:
+                          type: string
+                        distance:
+                          type: integer
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        user:
+                          type: string
+                          default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+                        weather:
+                          type: string
+                          readOnly: true
+                      required:
+                      - date
+                      - time
+                      - distance
+          description: ''
+    post:
+      operationId: createActivity
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                date:
+                  type: string
+                  format: date
+                time:
+                  type: string
+                distance:
+                  type: integer
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                user:
+                  type: string
+                  default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+              required:
+              - date
+              - time
+              - distance
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  date:
+                    type: string
+                    format: date
+                  time:
+                    type: string
+                  distance:
+                    type: integer
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  user:
+                    type: string
+                    default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+                  weather:
+                    type: string
+                    readOnly: true
+                required:
+                - date
+                - time
+                - distance
+          description: ''
+  /api/v1/activities/{id}:
+    get:
+      operationId: retrieveActivity
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this activity.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  date:
+                    type: string
+                    format: date
+                  time:
+                    type: string
+                  distance:
+                    type: integer
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  user:
+                    type: string
+                    default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+                  weather:
+                    type: string
+                    readOnly: true
+                required:
+                - date
+                - time
+                - distance
+          description: ''
+    put:
+      operationId: updateActivity
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this activity.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                date:
+                  type: string
+                  format: date
+                time:
+                  type: string
+                distance:
+                  type: integer
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                user:
+                  type: string
+                  default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+              required:
+              - date
+              - time
+              - distance
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  date:
+                    type: string
+                    format: date
+                  time:
+                    type: string
+                  distance:
+                    type: integer
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  user:
+                    type: string
+                    default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+                  weather:
+                    type: string
+                    readOnly: true
+                required:
+                - date
+                - time
+                - distance
+          description: ''
+    patch:
+      operationId: partial_updateActivity
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this activity.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                date:
+                  type: string
+                  format: date
+                time:
+                  type: string
+                distance:
+                  type: integer
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                user:
+                  type: string
+                  default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  date:
+                    type: string
+                    format: date
+                  time:
+                    type: string
+                  distance:
+                    type: integer
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  user:
+                    type: string
+                    default: !!python/object:rest_framework.fields.CurrentUserDefault {}
+                  weather:
+                    type: string
+                    readOnly: true
+                required:
+                - date
+                - time
+                - distance
+          description: ''
+  /api/v1/users:
+    get:
+      operationId: listUsers
+      description: ''
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        username:
+                          type: string
+                          description: Required. 150 characters or fewer. Letters,
+                            digits and @/./+/-/_ only.
+                          pattern: ^[\w.@+-]+\Z
+                          maxLength: 150
+                        first_name:
+                          type: string
+                          maxLength: 30
+                        last_name:
+                          type: string
+                          maxLength: 150
+                        role:
+                          enum:
+                          - 1
+                          - 2
+                          - 3
+                      required:
+                      - username
+          description: ''
+    post:
+      operationId: createUser
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id004
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                first_name:
+                  type: string
+                  maxLength: 30
+                last_name:
+                  type: string
+                  maxLength: 150
+                role:
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+              required:
+              - username
+          application/x-www-form-urlencoded:
+            schema: *id004
+          multipart/form-data:
+            schema: *id004
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                  role:
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                required:
+                - username
+          description: ''
+  /api/v1/users/{username}:
+    get:
+      operationId: retrieveUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                  role:
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                required:
+                - username
+          description: ''
+    put:
+      operationId: updateUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id005
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                first_name:
+                  type: string
+                  maxLength: 30
+                last_name:
+                  type: string
+                  maxLength: 150
+                role:
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+              required:
+              - username
+          application/x-www-form-urlencoded:
+            schema: *id005
+          multipart/form-data:
+            schema: *id005
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                  role:
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                required:
+                - username
+          description: ''
+    patch:
+      operationId: partial_updateUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id006
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                first_name:
+                  type: string
+                  maxLength: 30
+                last_name:
+                  type: string
+                  maxLength: 150
+                role:
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+          application/x-www-form-urlencoded:
+            schema: *id006
+          multipart/form-data:
+            schema: *id006
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                  role:
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                required:
+                - username
+          description: ''
+  /api/v1/users/{username}/report:
+    get:
+      operationId: reportUser
+      description: Return a report on average speed & distance per week
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                  role:
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                required:
+                - username
+          description: ''
+  /api/v1/weather:
+    get:
+      operationId: listWeathers
+      description: ''
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        title:
+                          type: string
+                          maxLength: 80
+                        description:
+                          type: string
+                          maxLength: 254
+                      required:
+                      - title
+                      - description
+          description: ''
+    post:
+      operationId: createWeather
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id007
+              properties:
+                title:
+                  type: string
+                  maxLength: 80
+                description:
+                  type: string
+                  maxLength: 254
+              required:
+              - title
+              - description
+          application/x-www-form-urlencoded:
+            schema: *id007
+          multipart/form-data:
+            schema: *id007
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  title:
+                    type: string
+                    maxLength: 80
+                  description:
+                    type: string
+                    maxLength: 254
+                required:
+                - title
+                - description
+          description: ''
+  /api/v1/weather/{title}:
+    get:
+      operationId: retrieveWeather
+      description: ''
+      parameters:
+      - name: title
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  title:
+                    type: string
+                    maxLength: 80
+                  description:
+                    type: string
+                    maxLength: 254
+                required:
+                - title
+                - description
+          description: ''
+    put:
+      operationId: updateWeather
+      description: ''
+      parameters:
+      - name: title
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id008
+              properties:
+                title:
+                  type: string
+                  maxLength: 80
+                description:
+                  type: string
+                  maxLength: 254
+              required:
+              - title
+              - description
+          application/x-www-form-urlencoded:
+            schema: *id008
+          multipart/form-data:
+            schema: *id008
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  title:
+                    type: string
+                    maxLength: 80
+                  description:
+                    type: string
+                    maxLength: 254
+                required:
+                - title
+                - description
+          description: ''
+    patch:
+      operationId: partial_updateWeather
+      description: ''
+      parameters:
+      - name: title
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id009
+              properties:
+                title:
+                  type: string
+                  maxLength: 80
+                description:
+                  type: string
+                  maxLength: 254
+          application/x-www-form-urlencoded:
+            schema: *id009
+          multipart/form-data:
+            schema: *id009
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  title:
+                    type: string
+                    maxLength: 80
+                  description:
+                    type: string
+                    maxLength: 254
+                required:
+                - title
+                - description
+          description: ''
+  /api/v1/auth/logout:
+    get:
+      operationId: listLogouts
+      description: Add logout capabilities to rest_framework.authtoken
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+  /api/v1/auth/login:
+    post:
+      operationId: CreateObtainAuthToken
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''

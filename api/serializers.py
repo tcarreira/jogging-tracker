@@ -6,7 +6,7 @@ from .models import Activity, User, Weather
 
 class ActivitySerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
-        queryset=User.objects.all(),
+        queryset=User.objects.all().filter(is_superuser=False),
         slug_field="username",
         default=serializers.CurrentUserDefault(),
     )
