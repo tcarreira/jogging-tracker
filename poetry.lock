@@ -551,6 +551,17 @@ python-versions = "*"
 version = "0.1.9"
 
 [[package]]
+category = "main"
+description = "Radically simplified static file serving for WSGI applications"
+name = "whitenoise"
+optional = false
+python-versions = ">=3.5, <4"
+version = "5.0.1"
+
+[package.extras]
+brotli = ["brotli"]
+
+[[package]]
 category = "dev"
 description = "Module for decorators, wrappers and monkey patching."
 name = "wrapt"
@@ -559,7 +570,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "5a0374c00a9dd870ec1ef5323ea8d3da8a51575c49431b45a9f632358211e3a9"
+content-hash = "fff9236921ea150e46c6ee100d50d2c825d6f6f662c6edb4ee7b37ec1dfc92c4"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -908,6 +919,10 @@ urllib3 = [
 wcwidth = [
     {file = "wcwidth-0.1.9-py2.py3-none-any.whl", hash = "sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1"},
     {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
+]
+whitenoise = [
+    {file = "whitenoise-5.0.1-py2.py3-none-any.whl", hash = "sha256:62556265ec1011bd87113fb81b7516f52688887b7a010ee899ff1fd18fd22700"},
+    {file = "whitenoise-5.0.1.tar.gz", hash = "sha256:0f9137f74bd95fa54329ace88d8dc695fbe895369a632e35f7a136e003e41d73"},
 ]
 wrapt = [
     {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
