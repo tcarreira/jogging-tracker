@@ -132,6 +132,47 @@ class TestAll(TestCase):
             },
         )
 
+        ###############################
+        # Add 5 activities (for testing report)
+        acts = {
+            "w15_mon": timezone.datetime(2020, 4, 6, 12, 0),
+            "w15_wed": timezone.datetime(2020, 4, 8, 12, 0),
+            "w15_sun": timezone.datetime(2020, 4, 12, 12, 0),
+            #
+            "w16_wed": timezone.datetime(2020, 4, 15, 12, 0),
+        }
+
+        for act in acts.values():
+            self.client.post(
+                BASE_API + "activities",
+                data={
+                    "distance": 10,
+                    "latitude": 30.0,
+                    "longitude": 40.0,
+                    "date": act,
+                    "user": "myuser",
+                },
+                format="json",
+                HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+            )
+
+        ###############################
+        # Test Reporting
+        response = self.client.get(
+            BASE_API + "users/myuser/report",
+            HTTP_AUTHORIZATION="Token {}".format(myuser_token),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 3)
+        self.assertDictEqual(
+            response.data["results"][0], {"year": 2020, "week": 15, "distance": 30}
+        )
+        self.assertDictEqual(
+            response.data["results"][1], {"year": 2020, "week": 16, "distance": 10}
+        )
+        self.assertEqual(response.data["results"][2]["distance"], 20)
+
 
 class TestActivityPagination(TestCase):
     @mock.patch("api.external_sources.WeatherProvider.getWeather")
