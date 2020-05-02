@@ -138,16 +138,6 @@ class UserViewSet(
     permission_classes = (IsAuthenticated, IsSelfOrAdmin)
     filter_backends = (IsSelfOrAdminFilterBackend,)
 
-    def create(self, *args, **kwargs):
-        response = super(UserViewSet, self).create(self.request, *args, **kwargs)
-
-        if "password" in self.request.data and "username" in response.data:
-            user = User.objects.get(username=response.data["username"])
-            user.set_password(self.request.data["password"])
-            user.save()
-
-        return response
-
     @action(detail=True, methods=["get"], filter_backends=(IsSelfOrAdminFilterBackend,))
     def report(self, request, username=None):
         "Return a report on average speed & distance per week"

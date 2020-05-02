@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from .models import Activity, User, Weather
+from .models import Activity, User, Weather, UserRoles
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -35,6 +35,8 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = "__all__"
@@ -44,6 +46,31 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "role",
         )
+
+    def get_role(self, obj):
+        return UserRoles(obj.role).name
+
+    def to_internal_value(self, data):
+        validated_data = super(UserSerializer, self).to_internal_value(data)
+
+        if "role" in data:
+            if hasattr(UserRoles, data["role"].upper()):
+                validated_data["role"] = getattr(UserRoles, data["role"].upper()).value
+            else:
+                raise serializers.ValidationError(
+                    {"role": "%s is not a valid role" % data["role"]}
+                )
+
+        return validated_data
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        if "password" in validated_data:
+            instance.set_password(validated_data["password"])
+
+        return super(UserSerializer, self).update(instance, validated_data)
 
 
 class WeatherSerializer(serializers.ModelSerializer):

@@ -9,6 +9,7 @@ from .external_sources import WeatherProvider
 
 
 class UserRoles(Enum):
+    # only UPPERCASE names (compared with uppercase somewhere)
     ADMIN = 1
     MANAGER = 2
     REGULAR = 3
