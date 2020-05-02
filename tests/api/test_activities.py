@@ -1,7 +1,7 @@
+import datetime
 from unittest import mock
 
 from django.test import TestCase
-from django.utils import timezone
 from rest_framework import status
 
 from api.models import Activity, User, Weather
@@ -31,25 +31,26 @@ class TestActivities(TestCase):
             "longitude": 30,
         }
 
-        self.this_now = timezone.now()
+        self.date = datetime.date(2020, 1, 31)
+        self.time = datetime.time(20, 58)
 
         a = Activity.objects.create(
-            date=self.this_now, user=users[0], **activity_common,
+            date=self.date, time=self.time, user=users[0], **activity_common,
         )
         Activity.objects.create(
-            date=self.this_now, user=users[0], **activity_common,
+            date=self.date, time=self.time, user=users[0], **activity_common,
         )
         Activity.objects.create(
-            date=self.this_now, user=users[1], **activity_common,
+            date=self.date, time=self.time, user=users[1], **activity_common,
         )
         Activity.objects.create(
-            date=self.this_now, user=users[2], **activity_common,
+            date=self.date, time=self.time, user=users[2], **activity_common,
         )
 
         # this activity will have weather=None
         mock_get_weather.return_value = None
         Activity.objects.create(
-            date=self.this_now, user=users[3], **activity_common,
+            date=self.date, time=self.time, user=users[3], **activity_common,
         )
 
     def test_get_only_own_activities(self):
@@ -86,6 +87,8 @@ class TestActivities(TestCase):
         response = self.client.get("/api/v1/activities/1",)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["date"], "2020-01-31")
+        self.assertEqual(response.data["time"], "20:58:00")
         self.assertEqual(response.data["distance"], 10)
         self.assertEqual(response.data["latitude"], 20.0)
         self.assertEqual(response.data["longitude"], 30.0)
@@ -118,7 +121,8 @@ class TestActivities(TestCase):
         response = self.client.post(
             "/api/v1/activities",
             {
-                "date": "2020-04-29T23:36:53Z",
+                "date": "2020-04-29",
+                "time": "23:36:53",
                 "distance": 5,
                 "latitude": 15.0,
                 "longitude": 16.0,
@@ -152,7 +156,8 @@ class TestActivities(TestCase):
         response = self.client.post(
             "/api/v1/activities",
             {
-                "date": "2020-04-29T23:36:53Z",
+                "date": "2020-04-29",
+                "time": "23:36:53",
                 "distance": 5,
                 "latitude": 15.0,
                 "longitude": 16.0,
@@ -175,7 +180,8 @@ class TestActivities(TestCase):
         response = self.client.post(
             "/api/v1/activities",
             {
-                "date": "2020-04-29T23:36:53Z",
+                "date": "2020-04-29",
+                "time": "23:36:53",
                 "distance": 5,
                 "latitude": 15.0,
                 "longitude": 16.0,

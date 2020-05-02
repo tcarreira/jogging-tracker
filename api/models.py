@@ -25,7 +25,8 @@ class User(AbstractUser):
 
 
 class Activity(models.Model):
-    date = models.DateTimeField(null=False)
+    date = models.DateField(null=False)
+    time = models.TimeField(null=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

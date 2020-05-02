@@ -27,7 +27,8 @@ class TestActivities(TestCase):
         for i, user in enumerate(users):
             for j in range(1, 30):
                 Activity.objects.create(
-                    date="2020-01-{:02d}T00:01:00Z".format(j),
+                    date="2020-01-{:02d}".format(j),
+                    time="00:01:00",
                     distance=10 * i,
                     user=user,
                     latitude=0,

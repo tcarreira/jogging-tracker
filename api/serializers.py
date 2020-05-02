@@ -19,6 +19,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "date",
+            "time",
             "distance",
             "latitude",
             "longitude",
@@ -26,11 +27,11 @@ class ActivitySerializer(serializers.ModelSerializer):
             "weather",
         )
 
-    def to_representation(self, instance):
-        representation = super(ActivitySerializer, self).to_representation(instance)
+    # def to_representation(self, instance):
+    #     representation = super(ActivitySerializer, self).to_representation(instance)
 
-        representation["date"] = instance.date.strftime(settings.API_DATETIME_FORMAT)
-        return representation
+    #     representation["date"] = instance.date.strftime(settings.API_DATETIME_FORMAT)
+    #     return representation
 
 
 class UserSerializer(serializers.ModelSerializer):

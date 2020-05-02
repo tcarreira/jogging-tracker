@@ -72,9 +72,9 @@ Integration tests: `pytest tests_integration`
   - [x] Advanced filtering
 - [x] Reports
   - [x] Average speed + Total distance / week
-- [ ] Revisions and manual tests
+- [x] Revisions and manual tests
   - [x] fix need for user on create activity
-  - [ ] fix date / hour fields
+  - [x] fix date / hour fields
 - [ ] Get it Production ready
 - [ ] Deploy
 
