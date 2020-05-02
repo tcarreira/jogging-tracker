@@ -21,6 +21,7 @@ USER appuser
 COPY --chown=appuser manage.py /app/.
 COPY --chown=appuser jogging_tracker /app/jogging_tracker
 COPY --chown=appuser api /app/api
+COPY --chown=appuser advanced_filters /app/advanced_filters
 
 # During debugging, this entry point will be overridden.
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "jogging_tracker.wsgi"]
