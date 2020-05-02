@@ -104,3 +104,95 @@ class TestActivities(TestCase):
         response = self.client.get("/api/v1/activities/1",)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def test_create_own_activity(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 234,
+            "title": "SomeClouds",
+            "description": "AnotherClouds",
+        }
+
+        self.assertTrue(self.client.login(username="user1", password="123456"))
+
+        response = self.client.post(
+            "/api/v1/activities",
+            {
+                "date": "2020-04-29T23:36:53Z",
+                "distance": 5,
+                "latitude": 15.0,
+                "longitude": 16.0,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["distance"], 5)
+        self.assertEqual(response.data["latitude"], 15.0)
+        self.assertEqual(response.data["longitude"], 16.0)
+        self.assertEqual(response.data["weather"], "SomeClouds")
+        id = response.data["id"]
+
+        response = self.client.get(f"/api/v1/activities/{id}",)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["distance"], 5)
+        self.assertEqual(response.data["latitude"], 15.0)
+        self.assertEqual(response.data["longitude"], 16.0)
+        self.assertEqual(response.data["weather"], "SomeClouds")
+
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def test_create_others_activity(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 234,
+            "title": "SomeClouds",
+            "description": "AnotherClouds",
+        }
+
+        self.assertTrue(self.client.login(username="user1", password="123456"))
+
+        response = self.client.post(
+            "/api/v1/activities",
+            {
+                "date": "2020-04-29T23:36:53Z",
+                "distance": 5,
+                "latitude": 15.0,
+                "longitude": 16.0,
+                "user": "user2",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @mock.patch("api.external_sources.WeatherProvider.getWeather")
+    def test_create_others_activity_as_admin(self, mock_get_weather):
+        mock_get_weather.return_value = {
+            "id": 234,
+            "title": "SomeClouds",
+            "description": "AnotherClouds",
+        }
+
+        self.assertTrue(self.client.login(username="useradmin", password="123456"))
+
+        response = self.client.post(
+            "/api/v1/activities",
+            {
+                "date": "2020-04-29T23:36:53Z",
+                "distance": 5,
+                "latitude": 15.0,
+                "longitude": 16.0,
+                "user": "user2",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["distance"], 5)
+        self.assertEqual(response.data["latitude"], 15.0)
+        self.assertEqual(response.data["longitude"], 16.0)
+        self.assertEqual(response.data["weather"], "SomeClouds")
+        id = response.data["id"]
+
+        response = self.client.get(f"/api/v1/activities/{id}",)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["distance"], 5)
+        self.assertEqual(response.data["latitude"], 15.0)
+        self.assertEqual(response.data["longitude"], 16.0)
+        self.assertEqual(response.data["weather"], "SomeClouds")

@@ -57,6 +57,23 @@ class ActivityViewSet(
     permission_classes = (IsAuthenticated, IsOwnerOrManager)
     filter_backends = (IsOwnerOrManagerFilterBackend,)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # self.check_object_permissions(request, serializer.data)
+        # if "user" in serializer.data:
+        # is_allowed = True
+        # for perm in self.permission_classes:
+        #     p = perm()
+        #     is_allowed = is_allowed and p.has_object_permission(request, view, object)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
 
 class UserViewSet(
     mixins.CreateModelMixin,
