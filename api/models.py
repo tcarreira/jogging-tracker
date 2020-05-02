@@ -27,7 +27,10 @@ class User(AbstractUser):
 class Activity(models.Model):
     date = models.DateTimeField(null=False)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="activities",
     )
     distance = models.PositiveIntegerField(null=False)
     weather = models.ForeignKey(
