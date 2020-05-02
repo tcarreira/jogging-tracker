@@ -5,6 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "migrate",
+                "api",
+                "0004",
+            ],
+            "env": {
+                "DATABASE_URL": "postgres://user:pass@localhost:5432/jogging"
+            },
+            "django": true,
+            "justMyCode": false
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
