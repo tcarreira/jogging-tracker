@@ -1,16 +1,23 @@
 from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
+from django.db.models.functions import ExtractWeek, ExtractYear
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filter_backends import IsSelfOrAdminFilterBackend, IsOwnerOrManagerFilterBackend
-
+from .filter_backends import IsOwnerOrManagerFilterBackend, IsSelfOrAdminFilterBackend
 from .models import Activity, User, Weather
-from .permissions import IsSelfOrAdmin, IsOwnerOrManager
-from .serializers import ActivitySerializer, UserSerializer, WeatherSerializer
+from .permissions import IsOwnerOrManager, IsSelfOrAdmin
+from .serializers import (
+    ActivityReportSerializer,
+    ActivitySerializer,
+    UserSerializer,
+    WeatherSerializer,
+)
 
 
 # Create your views here.
@@ -73,6 +80,27 @@ class UserViewSet(
             user.save()
 
         return response
+
+    @action(detail=True, methods=["get"], filter_backends=(IsSelfOrAdminFilterBackend,))
+    def report(self, request, username=None):
+        "Return a report on average speed & distance per week"
+        activities = self.get_object().activities.values("id", "date", "distance")
+        activities_avg_by_week = (
+            self.get_object()
+            .activities.values("date", "distance")
+            .annotate(year=ExtractYear("date"))
+            .annotate(week=ExtractWeek("date"))
+            .values("year", "week")
+            .annotate(sum_distance=Sum("distance"))
+        )
+
+        page = self.paginate_queryset(activities_avg_by_week)
+        if page is not None:
+            serializer = ActivityReportSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = ActivityReportSerializer(activities_avg_by_week, many=True)
+        return Response(serializer.data)
 
 
 class WeatherViewSet(

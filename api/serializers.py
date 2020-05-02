@@ -51,3 +51,12 @@ class WeatherSerializer(serializers.ModelSerializer):
             "title",
             "description",
         )
+
+
+class ActivityReportSerializer(serializers.Serializer):
+    year = serializers.IntegerField()
+    week = serializers.IntegerField()
+    distance = serializers.SerializerMethodField()
+
+    def get_distance(self, obj):
+        return obj["sum_distance"]

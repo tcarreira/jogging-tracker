@@ -70,8 +70,8 @@ Integration tests: `pytest tests_integration`
   - [x] Simple filtering
   - [x] Pagination
   - [x] Advanced filtering
-- [ ] Reports
-  - [ ] Average speed + Total distance / week
+- [x] Reports
+  - [x] Average speed + Total distance / week
 - [ ] Revisions and manual tests
 - [ ] Get it Production ready
 - [ ] Deploy
