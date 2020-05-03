@@ -29,7 +29,10 @@ class IsSelfOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if bool(
             request.user
-            and (request.user.is_superuser or request.user.role in [UserRoles.ADMIN])
+            and (
+                request.user.is_superuser
+                or request.user.role in [r.value for r in [UserRoles.ADMIN]]
+            )
         ):
             return True
 
@@ -49,7 +52,8 @@ class IsOwnerOrManager(permissions.BasePermission):
                 return (
                     user == request.user
                     or request.user.is_superuser
-                    or request.user.role in [UserRoles.MANAGER, UserRoles.ADMIN]
+                    or request.user.role
+                    in [r.value for r in [UserRoles.MANAGER, UserRoles.ADMIN]]
                 )
             except:
                 return False
@@ -61,7 +65,8 @@ class IsOwnerOrManager(permissions.BasePermission):
             request.user
             and (
                 request.user.is_superuser
-                or request.user.role in [UserRoles.MANAGER, UserRoles.ADMIN]
+                or request.user.role
+                in [r.value for r in [UserRoles.MANAGER, UserRoles.ADMIN]]
             )
         ):
             return True
