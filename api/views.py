@@ -5,7 +5,7 @@ from django.db.models.functions import ExtractWeek, ExtractYear
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -135,7 +135,7 @@ class UserViewSet(
     lookup_field = "username"
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsSelfOrAdmin)
+    permission_classes = (AllowAny, IsSelfOrAdmin)
     filter_backends = (IsSelfOrAdminFilterBackend,)
 
     @action(detail=True, methods=["get"], filter_backends=(IsSelfOrAdminFilterBackend,))
