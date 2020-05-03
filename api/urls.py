@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.renderers import JSONOpenAPIRenderer
 from rest_framework.routers import SimpleRouter
@@ -35,6 +37,7 @@ urlpatterns = [
             description="REST API that tracks jogging times of users",
             version=__version__,
             renderer_classes=[JSONOpenAPIRenderer],
+            authentication_classes=[TokenAuthentication],
         ),
         name="openapi-json-schema",
     ),

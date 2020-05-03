@@ -22,6 +22,24 @@ class IsSelfOrAdminFilterBackend(AdvancedFilter):
         return queryset.filter(id=request.user.id)
 
 
+class IsSelfOrManagerFilterBackend(AdvancedFilter):
+    """
+    Filter that only allows users to see their own objects.
+    """
+
+    def filter_queryset(self, request, queryset, view):
+        queryset = super(IsSelfOrManagerFilterBackend, self).filter_queryset(request, queryset, view)
+        if bool(
+            request.user and (
+                request.user.is_superuser or (
+                    hasattr(request.user, "role") and request.user.role in [r.value for r in [UserRoles.ADMIN, UserRoles.MANAGER]]
+                )
+            )
+        ):
+            return queryset.filter(is_superuser=False)
+        return queryset.filter(id=request.user.id)
+
+
 class IsOwnerOrAdminFilterBackend(AdvancedFilter):
     """
     Filter that only allows users to see their own objects.

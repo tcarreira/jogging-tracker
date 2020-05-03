@@ -100,7 +100,7 @@ class TestUsers(TestCase):
         response = self.client.get("/api/v1/users")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["count"], 3)
 
     def test_list_users_admin_login(self):
         self.assertTrue(self.client.login(username="user_admin", password="123456"))

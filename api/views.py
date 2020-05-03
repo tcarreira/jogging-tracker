@@ -5,13 +5,17 @@ from django.db.models.functions import ExtractWeek, ExtractYear
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filter_backends import IsOwnerOrManagerFilterBackend, IsSelfOrAdminFilterBackend
+from .filter_backends import (
+    IsOwnerOrAdminFilterBackend,
+    IsSelfOrAdminFilterBackend,
+    IsSelfOrManagerFilterBackend,
+)
 from .models import Activity, User, Weather
-from .permissions import IsOwnerOrManager, IsSelfOrAdmin
+from .permissions import IsOwnerOrAdmin, IsSelfOrAdmin, IsSelfOrManager
 from .serializers import (
     ActivityReportSerializer,
     ActivitySerializer,
@@ -79,8 +83,8 @@ class ActivityViewSet(
     lookup_field = "id"
     queryset = Activity.objects.select_related("user", "weather")
     serializer_class = ActivitySerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrManager)
-    filter_backends = (IsOwnerOrManagerFilterBackend,)
+    permission_classes = (IsAuthenticated, IsOwnerOrAdmin)
+    filter_backends = (IsOwnerOrAdminFilterBackend,)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -135,8 +139,8 @@ class UserViewSet(
     lookup_field = "username"
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny, IsSelfOrAdmin)
-    filter_backends = (IsSelfOrAdminFilterBackend,)
+    permission_classes = (AllowAny, IsSelfOrManager)
+    filter_backends = (IsSelfOrManagerFilterBackend,)
 
     @action(detail=True, methods=["get"], filter_backends=(IsSelfOrAdminFilterBackend,))
     def report(self, request, username=None):
