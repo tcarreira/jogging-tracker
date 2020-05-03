@@ -60,6 +60,9 @@ class UserSerializer(serializers.ModelSerializer):
                     {"role": "%s is not a valid role" % data["role"]}
                 )
 
+        if "password" in data:
+            validated_data["password"] = data["password"]
+
         return validated_data
 
     def create(self, validated_data):
