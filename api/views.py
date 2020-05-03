@@ -5,6 +5,7 @@ from django.db.models.functions import ExtractWeek, ExtractYear
 from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,7 +15,7 @@ from .filter_backends import (
     IsSelfOrAdminFilterBackend,
     IsSelfOrManagerFilterBackend,
 )
-from .models import Activity, User, Weather
+from .models import Activity, User, UserRoles, Weather
 from .permissions import IsOwnerOrAdmin, IsSelfOrAdmin, IsSelfOrManager
 from .serializers import (
     ActivityReportSerializer,
@@ -143,6 +144,63 @@ class UserViewSet(
             return self.get_paginated_response(serializer.data)
 
         serializer = ActivityReportSerializer(activities_avg_by_week, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # check for previlege escalation:
+        if (
+            "role" in serializer.validated_data
+            and serializer.validated_data["role"] < UserRoles.REGULAR.value
+            and not request.user.is_superuser
+            and (
+                not hasattr(request.user, "role")
+                or serializer.validated_data["role"] < request.user.role
+            )
+        ):
+            # cannot upgrade to better permissions than self's
+            raise PermissionDenied(
+                "You do not have permissions for creating a User with role %s"
+                % serializer.validated_data["role"]
+            )
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # check for previlege escalation:
+        if (
+            "role" in serializer.validated_data
+            and serializer.validated_data["role"] < UserRoles.REGULAR.value
+            and not request.user.is_superuser
+            and (
+                not hasattr(request.user, "role")
+                or serializer.validated_data["role"] < request.user.role
+            )
+        ):
+            # cannot upgrade to better permissions than self's
+            raise PermissionDenied(
+                "You do not have permissions for upgrading user to role %s"
+                % serializer.validated_data["role"]
+            )
+
+        self.perform_update(serializer)
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
         return Response(serializer.data)
 
 

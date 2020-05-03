@@ -46,7 +46,10 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_role(self, obj):
-        return UserRoles(obj.role).name
+        if hasattr(obj, "role"):
+            return UserRoles(obj.role).name
+        else:
+            return UserRoles(obj["role"]).name
 
     def to_internal_value(self, data):
         validated_data = super(UserSerializer, self).to_internal_value(data)

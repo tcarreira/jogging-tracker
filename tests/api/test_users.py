@@ -73,6 +73,7 @@ class TestUsers(TestCase):
                 "password": "123456",
                 "first_name": "First",
                 "last_name": "Last",
+                "role": "regular",
             },
             content_type="application/json",
         )
@@ -87,6 +88,75 @@ class TestUsers(TestCase):
                 "role": "REGULAR",
             },
         )
+
+    def test_create_no_login_fail_previlege(self):
+        for role in [UserRoles.ADMIN, UserRoles.MANAGER]:
+            response = self.client.post(
+                "/api/v1/users",
+                {
+                    "username": "user1",
+                    "password": "123456",
+                    "first_name": "First",
+                    "last_name": "Last",
+                    "role": role.name,
+                },
+                content_type="application/json",
+            )
+
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_regular_fail_previlege_escalation(self):
+        self.assertTrue(self.client.login(username="user_regular", password="123456"))
+
+        for role in [UserRoles.ADMIN, UserRoles.MANAGER]:
+            response = self.client.put(
+                "/api/v1/users/user_regular",
+                {
+                    "username": "user_regular",
+                    "password": "123456",
+                    "first_name": "First",
+                    "last_name": "Last",
+                    "role": role.name,
+                },
+                content_type="application/json",
+            )
+
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_manager_previlege_escalation(self):
+        self.assertTrue(self.client.login(username="user_manager", password="123456"))
+
+        response = self.client.put(
+            "/api/v1/users/user_regular",
+            {
+                "username": "user_regular",
+                "password": "123456",
+                "first_name": "First",
+                "last_name": "Last",
+                "role": UserRoles.MANAGER.name,
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["role"], "MANAGER")
+
+    def test_create_manager_previlege_escalation_fails_to_admin(self):
+        self.assertTrue(self.client.login(username="user_manager", password="123456"))
+
+        response = self.client.put(
+            "/api/v1/users/user_regular",
+            {
+                "username": "user_regular",
+                "password": "123456",
+                "first_name": "First",
+                "last_name": "Last",
+                "role": UserRoles.ADMIN.name,
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_list_users_no_login(self):
         response = self.client.get("/api/v1/users")
