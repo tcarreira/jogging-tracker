@@ -27,6 +27,7 @@ class TestActivities(TestCase):
 
         activity_common = {
             "distance": 10,
+            "duration": datetime.timedelta(minutes=25),
             "latitude": 20,
             "longitude": 30,
         }
@@ -124,24 +125,32 @@ class TestActivities(TestCase):
                 "date": "2020-04-29",
                 "time": "23:36:53",
                 "distance": 5,
+                "duration": "25:00",
                 "latitude": 15.0,
                 "longitude": 16.0,
             },
             content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["distance"], 5)
-        self.assertEqual(response.data["latitude"], 15.0)
-        self.assertEqual(response.data["longitude"], 16.0)
-        self.assertEqual(response.data["weather"], "SomeClouds")
         id = response.data["id"]
+        expected = {
+            "id": id,
+            "user": "user1",
+            "date": "2020-04-29",
+            "time": "23:36:53",
+            "distance": 5,
+            "duration": "00:25:00",
+            "latitude": 15.0,
+            "longitude": 16.0,
+            "weather": "SomeClouds",
+        }
+        self.assertDictEqual(
+            response.data, expected,
+        )
 
         response = self.client.get(f"/api/v1/activities/{id}",)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["distance"], 5)
-        self.assertEqual(response.data["latitude"], 15.0)
-        self.assertEqual(response.data["longitude"], 16.0)
-        self.assertEqual(response.data["weather"], "SomeClouds")
+        self.assertDictEqual(response.data, expected)
 
     @mock.patch("api.external_sources.WeatherProvider.getWeather")
     def test_create_others_activity(self, mock_get_weather):
@@ -159,6 +168,7 @@ class TestActivities(TestCase):
                 "date": "2020-04-29",
                 "time": "23:36:53",
                 "distance": 5,
+                "duration": "10:00",
                 "latitude": 15.0,
                 "longitude": 16.0,
                 "user": "user2",
@@ -183,6 +193,7 @@ class TestActivities(TestCase):
                 "date": "2020-04-29",
                 "time": "23:36:53",
                 "distance": 5,
+                "duration": "10:00",
                 "latitude": 15.0,
                 "longitude": 16.0,
                 "user": "user2",

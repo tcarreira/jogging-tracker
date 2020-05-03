@@ -31,6 +31,7 @@ class TestAll(TestCase):
 
         Activity.objects.create(
             distance=20,
+            duration=datetime.timedelta(minutes=1),
             latitude=30,
             longitude=40,
             date=self.date,
@@ -110,6 +111,7 @@ class TestAll(TestCase):
             BASE_API + "activities",
             data={
                 "distance": 20,
+                "duration": "01:00",
                 "latitude": 30.0,
                 "longitude": 40.0,
                 "date": "2020-01-31",
@@ -127,6 +129,7 @@ class TestAll(TestCase):
         )
         self.assertEqual(response.data["id"], 2)
         self.assertEqual(response.data["distance"], 20)
+        self.assertEqual(response.data["duration"], "00:01:00")
         self.assertEqual(response.data["latitude"], 30.0)
         self.assertEqual(response.data["longitude"], 40.0)
         self.assertEqual(response.data["date"], "2020-01-31")
@@ -149,6 +152,7 @@ class TestAll(TestCase):
             {
                 "id": 2,
                 "distance": 20,
+                "duration": "00:01:00",
                 "latitude": 30.0,
                 "longitude": 40.0,
                 "date": "2020-01-31",
@@ -172,6 +176,7 @@ class TestAll(TestCase):
                 BASE_API + "activities",
                 data={
                     "distance": 10,
+                    "duration": "01:00",
                     "latitude": 30.0,
                     "longitude": 40.0,
                     "date": act,
@@ -192,10 +197,12 @@ class TestAll(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 3)
         self.assertDictEqual(
-            response.data["results"][0], {"year": 2019, "week": 15, "distance": 30}
+            response.data["results"][0],
+            {"year": 2019, "week": 15, "distance": 30, "average_speed": 0.167},
         )
         self.assertDictEqual(
-            response.data["results"][1], {"year": 2019, "week": 16, "distance": 10}
+            response.data["results"][1],
+            {"year": 2019, "week": 16, "distance": 10, "average_speed": 0.167},
         )
         self.assertEqual(response.data["results"][2]["distance"], 20)
 
@@ -216,7 +223,8 @@ class TestActivityPagination(TestCase):
             Activity.objects.create(
                 date="2020-01-01",
                 time="00:01:{:02d}".format(i),
-                distance=i,
+                distance=100 * (i + 1),
+                duration=datetime.timedelta(minutes=(i + 1)),
                 user=user,
                 latitude=0,
                 longitude=0,
@@ -245,7 +253,8 @@ class TestActivityPagination(TestCase):
             Activity.objects.create(
                 date="2020-01-01",
                 time="00:{:02d}:{:02d}".format(int(i / 60), i % 60),
-                distance=i,
+                distance=100 * (i + 1),
+                duration=datetime.timedelta(minutes=(i + 1)),
                 user=user,
                 latitude=0,
                 longitude=0,
@@ -286,6 +295,7 @@ class TestAdvancedFilters(TestCase):
                 date="2020-{:02d}-{:02d}".format(int(i / 27) + 1, (i % 27) + 1),
                 time="00:{:02d}:{:02d}Z".format(int(i / 60), i % 60),
                 distance=i,
+                duration=datetime.timedelta(minutes=1),
                 user=user,
                 latitude=0,
                 longitude=0,

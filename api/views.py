@@ -128,14 +128,13 @@ class UserViewSet(
     @action(detail=True, methods=["get"], filter_backends=(IsSelfOrAdminFilterBackend,))
     def report(self, request, username=None):
         "Return a report on average speed & distance per week"
-        activities = self.get_object().activities.values("id", "date", "distance")
         activities_avg_by_week = (
             self.get_object()
-            .activities.values("date", "distance")
+            .activities.values("date", "distance", "duration")
             .annotate(year=ExtractYear("date"))
             .annotate(week=ExtractWeek("date"))
             .values("year", "week")
-            .annotate(sum_distance=Sum("distance"))
+            .annotate(sum_distance=Sum("distance"), sum_duration=Sum("duration"),)
         )
 
         page = self.paginate_queryset(activities_avg_by_week)

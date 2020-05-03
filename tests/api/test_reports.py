@@ -1,3 +1,4 @@
+import datetime
 from unittest import mock
 
 from django.test import TestCase
@@ -29,7 +30,8 @@ class TestActivities(TestCase):
                 Activity.objects.create(
                     date="2020-01-{:02d}".format(j),
                     time="00:01:00",
-                    distance=10 * i,
+                    distance=10 * (i + 1),
+                    duration=datetime.timedelta(minutes=(i + 1)),
                     user=user,
                     latitude=0,
                     longitude=0,
@@ -42,7 +44,9 @@ class TestActivities(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 5)  # 5 weeks
         self.assertDictEqual(
-            response.data["results"][0], {"year": 2020, "week": 1, "distance": 0}
+            response.data["results"][0],
+            #                                        avg_speed = 10m / 60s = 0.167 m/s
+            {"year": 2020, "week": 1, "distance": 50, "average_speed": 0.167},
         )
 
     def test_report_activities_wrong_user(self):
@@ -59,14 +63,25 @@ class TestActivities(TestCase):
         self.assertEqual(response.data["count"], 5)  # 5 weeks
         self.assertDictEqual(
             response.data["results"][0],
-            {"year": 2020, "week": 1, "distance": 50},  # this week was only 5 days
+            {
+                "year": 2020,
+                "week": 1,
+                "distance": 100,
+                "average_speed": 0.167,
+            },  # this week was only 5 days
         )
         self.assertDictEqual(
-            response.data["results"][1], {"year": 2020, "week": 2, "distance": 70}
+            response.data["results"][1],
+            {"year": 2020, "week": 2, "distance": 140, "average_speed": 0.167},
         )
         self.assertDictEqual(
             response.data["results"][4],
-            {"year": 2020, "week": 5, "distance": 30},  # days 27, 28, 29 / jan 2020
+            {
+                "year": 2020,
+                "week": 5,
+                "distance": 60,
+                "average_speed": 0.167,
+            },  # days 27, 28, 29 / jan 2020
         )
 
     def test_report_activities_admin_can_see_user2(self):
@@ -77,12 +92,23 @@ class TestActivities(TestCase):
         self.assertEqual(response.data["count"], 5)  # 5 weeks
         self.assertDictEqual(
             response.data["results"][0],
-            {"year": 2020, "week": 1, "distance": 50},  # this week was only 5 days
+            {
+                "year": 2020,
+                "week": 1,
+                "distance": 100,
+                "average_speed": 0.167,
+            },  # this week was only 5 days
         )
         self.assertDictEqual(
-            response.data["results"][1], {"year": 2020, "week": 2, "distance": 70}
+            response.data["results"][1],
+            {"year": 2020, "week": 2, "distance": 140, "average_speed": 0.167},
         )
         self.assertDictEqual(
             response.data["results"][4],
-            {"year": 2020, "week": 5, "distance": 30},  # days 27, 28, 29 / jan 2020
+            {
+                "year": 2020,
+                "week": 5,
+                "distance": 60,
+                "average_speed": 0.167,
+            },  # days 27, 28, 29 / jan 2020
         )

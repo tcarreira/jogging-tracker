@@ -35,6 +35,7 @@ class Activity(models.Model):
         related_name="activities",
     )
     distance = models.PositiveIntegerField(null=False)
+    duration = models.DurationField(null=False)
     weather = models.ForeignKey(
         "Weather", null=True, blank=True, on_delete=models.DO_NOTHING
     )

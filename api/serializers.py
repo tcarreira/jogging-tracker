@@ -25,17 +25,12 @@ class ActivitySerializer(serializers.ModelSerializer):
             "date",
             "time",
             "distance",
+            "duration",
             "latitude",
             "longitude",
             "user",
             "weather",
         )
-
-    # def to_representation(self, instance):
-    #     representation = super(ActivitySerializer, self).to_representation(instance)
-
-    #     representation["date"] = instance.date.strftime(settings.API_DATETIME_FORMAT)
-    #     return representation
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -92,7 +87,14 @@ class WeatherSerializer(serializers.ModelSerializer):
 class ActivityReportSerializer(serializers.Serializer):
     year = serializers.IntegerField()
     week = serializers.IntegerField()
+    average_speed = serializers.SerializerMethodField()
     distance = serializers.SerializerMethodField()
 
     def get_distance(self, obj):
         return obj["sum_distance"]
+
+    def get_average_speed(self, obj):
+        try:
+            return round(obj["sum_distance"] / obj["sum_duration"].total_seconds(), 3)
+        except ZeroDivisionError:
+            return None
