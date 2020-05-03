@@ -23,7 +23,7 @@ class TestAll(TestCase):
         mock_get_json.return_value = (None, owm_stub_response_json)
 
         user = User.objects.create_superuser(
-            username="admin", email="", password="adminpass"
+            username="superuser_admin", email="", password="superadminpass"
         )
 
         self.date = datetime.date(2020, 1, 31)
@@ -47,6 +47,29 @@ class TestAll(TestCase):
         mock_get_json.return_value = (None, owm_stub_response_json)
 
         #####################################################################
+        # Create admin user
+        response = self.client.post(
+            BASE_API + "auth/login",
+            data={"username": "superuser_admin", "password": "superadminpass"},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "token")
+        superadmin_token = response.data["token"]
+
+        #####################################################################
+        # Create new admin user
+        response = self.client.post(
+            BASE_API + "users",
+            data={"username": "admin", "password": "adminpass", "role": "admin"},
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Token {}".format(superadmin_token),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["role"], "ADMIN")
+
+        #####################################################################
         # Login with admin user
         response = self.client.post(
             BASE_API + "auth/login",
@@ -59,10 +82,7 @@ class TestAll(TestCase):
         admin_token = response.data["token"]
 
         #####################################################################
-        # Create user without credentials should fail (NOT YET IMPLEMENTED)
-
-        #####################################################################
-        # Create new user
+        # Create user without credentials
         response = self.client.post(
             BASE_API + "users",
             data={"username": "myuser", "password": "supersecurepass"},
