@@ -127,7 +127,7 @@ class TestActivities(TestCase):
                 "latitude": 15.0,
                 "longitude": 16.0,
             },
-            format="json",
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["distance"], 5)
@@ -163,7 +163,7 @@ class TestActivities(TestCase):
                 "longitude": 16.0,
                 "user": "user2",
             },
-            format="json",
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -187,7 +187,7 @@ class TestActivities(TestCase):
                 "longitude": 16.0,
                 "user": "user2",
             },
-            format="json",
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["distance"], 5)

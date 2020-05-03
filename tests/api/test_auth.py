@@ -48,7 +48,9 @@ class TestAuthentication(TestCase):
     def test_login_wrong_credentials(self):
         factory = APIRequestFactory()
         request = factory.post(
-            "/api/v1/login", {"username": "user", "password": "pass"}, format="json"
+            "/api/v1/login",
+            {"username": "user", "password": "pass"},
+            content_type="application/json",
         )
         response = obtain_auth_token(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

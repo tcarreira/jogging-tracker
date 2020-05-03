@@ -51,7 +51,7 @@ class TestAll(TestCase):
         response = self.client.post(
             BASE_API + "auth/login",
             data={"username": "admin", "password": "adminpass"},
-            format="json",
+            content_type="application/json",
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,7 +66,7 @@ class TestAll(TestCase):
         response = self.client.post(
             BASE_API + "users",
             data={"username": "myuser", "password": "supersecurepass"},
-            format="json",
+            content_type="application/json",
             HTTP_AUTHORIZATION="Token {}".format(admin_token),
         )
 
@@ -96,7 +96,7 @@ class TestAll(TestCase):
                 "time": "20:58",
                 "user": "myuser",
             },
-            format="json",
+            content_type="application/json",
             HTTP_AUTHORIZATION="Token {}".format(myuser_token),
         )
 
@@ -158,7 +158,7 @@ class TestAll(TestCase):
                     "time": "20:58",
                     "user": "myuser",
                 },
-                format="json",
+                content_type="application/json",
                 HTTP_AUTHORIZATION="Token {}".format(myuser_token),
             )
 
