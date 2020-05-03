@@ -1,3 +1,12 @@
+# Jogging Tracker REST API
+
+QA Server:
+
+https://jogging-tracker-api.herokuapp.com/api/v1
+
+Download API schema: https://jogging-tracker-api.herokuapp.com/api/v1/schema.json (then you can import it to Postman)
+
+
 # Task
 
 Write a REST API that tracks jogging times of users

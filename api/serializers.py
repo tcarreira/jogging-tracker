@@ -4,11 +4,15 @@ from rest_framework import serializers
 from .models import Activity, User, Weather, UserRoles
 
 
+class CustomCurrentUserDefault(dict, serializers.CurrentUserDefault):
+    pass
+
+
 class ActivitySerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         queryset=User.objects.all().filter(is_superuser=False),
         slug_field="username",
-        default=serializers.CurrentUserDefault(),
+        default=CustomCurrentUserDefault(),
     )
     weather = serializers.SlugRelatedField(read_only=True, slug_field="title")
     latitude = serializers.FloatField(required=False)

@@ -437,7 +437,7 @@ python-versions = "*"
 version = "2020.1"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -522,7 +522,7 @@ python-versions = "*"
 version = "3.7.4.2"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "URI templates"
 name = "uritemplate"
 optional = false
@@ -570,7 +570,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "fff9236921ea150e46c6ee100d50d2c825d6f6f662c6edb4ee7b37ec1dfc92c4"
+content-hash = "97ed27891beb0cc30492e423f0e5aeb43e10cdbfe306eb7fc48d6c6a14409c7d"
 python-versions = "^3.8"
 
 [metadata.files]
