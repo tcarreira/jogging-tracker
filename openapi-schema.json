@@ -1,0 +1,1379 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "paths": {
+    "/api/v1/activities": {
+      "get": {
+        "operationId": "listActivitys",
+        "description": "Return owned Activities",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "next": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "previous": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "readOnly": true
+                          },
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "time": {
+                            "type": "string"
+                          },
+                          "distance": {
+                            "type": "integer"
+                          },
+                          "duration": {
+                            "type": "string"
+                          },
+                          "latitude": {
+                            "type": "number"
+                          },
+                          "longitude": {
+                            "type": "number"
+                          },
+                          "user": {
+                            "type": "string"
+                          },
+                          "weather": {
+                            "type": "string",
+                            "readOnly": true
+                          }
+                        },
+                        "required": [
+                          "date",
+                          "time",
+                          "distance",
+                          "duration"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "operationId": "createActivity",
+        "description": "Enpoint for creating an Activity",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "time": {
+                      "type": "string"
+                    },
+                    "distance": {
+                      "type": "integer"
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "time",
+                    "distance",
+                    "duration"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/activities/{id}": {
+      "get": {
+        "operationId": "retrieveActivity",
+        "description": "Return an Activity instance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique integer value identifying this activity.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "time": {
+                      "type": "string"
+                    },
+                    "distance": {
+                      "type": "integer"
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "time",
+                    "distance",
+                    "duration"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateActivity",
+        "description": "Update Activity instance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique integer value identifying this activity.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "date",
+                  "time",
+                  "distance",
+                  "duration"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "time": {
+                      "type": "string"
+                    },
+                    "distance": {
+                      "type": "integer"
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "time",
+                    "distance",
+                    "duration"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "partial_updateActivity",
+        "description": "API endpoint that allows activities to be viewed or edited.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique integer value identifying this activity.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "integer"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "time": {
+                      "type": "string"
+                    },
+                    "distance": {
+                      "type": "integer"
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "time",
+                    "distance",
+                    "duration"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "destroyActivity",
+        "description": "Delete Activity instance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique integer value identifying this activity.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "operationId": "listUsers",
+        "description": "Return all users, ordered by most recently joined",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "next": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "previous": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "username": {
+                            "type": "string",
+                            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                            "pattern": "^[\\w.@+-]+\\Z",
+                            "maxLength": 150
+                          },
+                          "first_name": {
+                            "type": "string",
+                            "maxLength": 30
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "maxLength": 150
+                          },
+                          "role": {
+                            "type": "string",
+                            "readOnly": true
+                          }
+                        },
+                        "required": [
+                          "username"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "operationId": "createUser",
+        "description": "Enpoint for creating a User. Returns a User instance",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                      "pattern": "^[\\w.@+-]+\\Z",
+                      "maxLength": 150
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "maxLength": 150
+                    },
+                    "role": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/users/{username}": {
+      "get": {
+        "operationId": "retrieveUser",
+        "description": "Return a User instance",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                      "pattern": "^[\\w.@+-]+\\Z",
+                      "maxLength": 150
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "maxLength": 150
+                    },
+                    "role": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateUser",
+        "description": "Update User instance",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "username"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                      "pattern": "^[\\w.@+-]+\\Z",
+                      "maxLength": 150
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "maxLength": 150
+                    },
+                    "role": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "operationId": "partial_updateUser",
+        "description": "API endpoint that allows users to be viewed or edited.",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "pattern": "^[\\w.@+-]+\\Z",
+                    "maxLength": 150
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 150
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                      "pattern": "^[\\w.@+-]+\\Z",
+                      "maxLength": 150
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "maxLength": 150
+                    },
+                    "role": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "destroyUser",
+        "description": "Delete User instance",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/users/{username}/report": {
+      "get": {
+        "operationId": "reportUser",
+        "description": "Return a report on average speed & distance per week",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                      "pattern": "^[\\w.@+-]+\\Z",
+                      "maxLength": 150
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "maxLength": 30
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "maxLength": 150
+                    },
+                    "role": {
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/weather": {
+      "get": {
+        "operationId": "listWeathers",
+        "description": "Return all Weathers",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "next": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "previous": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "readOnly": true
+                          },
+                          "title": {
+                            "type": "string",
+                            "maxLength": 80
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 254
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "description"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/weather/{title}": {
+      "get": {
+        "operationId": "retrieveWeather",
+        "description": "Return a Weather instance.",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "readOnly": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "description": {
+                      "type": "string",
+                      "maxLength": 254
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "get": {
+        "operationId": "listLogouts",
+        "description": "Logout a User",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {}
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "CreateObtainAuthToken",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    }
+  }
+}
