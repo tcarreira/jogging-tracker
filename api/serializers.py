@@ -1,7 +1,8 @@
 from django.conf import settings
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .models import Activity, User, Weather, UserRoles
+from .models import Activity, User, UserRoles, Weather
 
 
 class CustomCurrentUserDefault(dict, serializers.CurrentUserDefault):
@@ -68,10 +69,14 @@ class UserSerializer(serializers.ModelSerializer):
         return validated_data
 
     def create(self, validated_data):
+        if "password" in validated_data:
+            validate_password(validated_data["password"])
+
         return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
         if "password" in validated_data:
+            validate_password(validated_data["password"])
             instance.set_password(validated_data["password"])
 
         return super(UserSerializer, self).update(instance, validated_data)

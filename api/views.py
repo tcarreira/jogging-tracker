@@ -1,8 +1,8 @@
 from django.contrib.auth import logout
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Sum
 from django.db.models.functions import ExtractWeek, ExtractYear
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
@@ -163,10 +163,13 @@ class UserViewSet(
             # cannot upgrade to better permissions than self's
             raise PermissionDenied(
                 "You do not have permissions for creating a User with role %s"
-                % serializer.validated_data["role"]
+                % UserRoles(serializer.validated_data["role"]).name
             )
 
-        self.perform_create(serializer)
+        try:
+            self.perform_create(serializer)
+        except ValidationError as e:
+            return HttpResponseBadRequest(e)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
@@ -194,7 +197,10 @@ class UserViewSet(
                 % serializer.validated_data["role"]
             )
 
-        self.perform_update(serializer)
+        try:
+            self.perform_update(serializer)
+        except ValidationError as e:
+            return HttpResponseBadRequest(e)
 
         if getattr(instance, "_prefetched_objects_cache", None):
             # If 'prefetch_related' has been applied to a queryset, we need to

@@ -91,7 +91,16 @@ class TestAll(TestCase):
             HTTP_AUTHORIZATION="Token {}".format(admin_token),
         )
 
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        #####################################################################
+        # Create user without password - fails
+        response = self.client.post(
+            BASE_API + "users",
+            data={"username": "myuser", "password": "supersecurepass"},
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Token {}".format(admin_token),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         #####################################################################
         # Login as new user:
