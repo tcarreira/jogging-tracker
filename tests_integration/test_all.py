@@ -221,8 +221,8 @@ class TestActivityPagination(TestCase):
         results_per_page = settings.REST_FRAMEWORK["PAGE_SIZE"]
         for i in range(results_count):
             Activity.objects.create(
-                date="2020-01-01",
-                time="00:01:{:02d}".format(i),
+                date=datetime.date(2020, 1, 1),
+                time=datetime.time(0, 1, i),
                 distance=100 * (i + 1),
                 duration=datetime.timedelta(minutes=(i + 1)),
                 user=user,
@@ -251,8 +251,8 @@ class TestActivityPagination(TestCase):
         results_per_page = 30
         for i in range(results_count):
             Activity.objects.create(
-                date="2020-01-01",
-                time="00:{:02d}:{:02d}".format(int(i / 60), i % 60),
+                date=datetime.date(2020, 1, 1),
+                time=datetime.time(0, int(i / 60), i % 60),
                 distance=100 * (i + 1),
                 duration=datetime.timedelta(minutes=(i + 1)),
                 user=user,
@@ -292,8 +292,8 @@ class TestAdvancedFilters(TestCase):
         results_per_page = 30
         for i in range(results_count):
             Activity.objects.create(
-                date="2020-{:02d}-{:02d}".format(int(i / 27) + 1, (i % 27) + 1),
-                time="00:{:02d}:{:02d}Z".format(int(i / 60), i % 60),
+                date=datetime.date(2020, int(i / 27) + 1, (i % 27) + 1),
+                time=datetime.time(0, int(i / 60), i % 60),
                 distance=i,
                 duration=datetime.timedelta(minutes=1),
                 user=user,

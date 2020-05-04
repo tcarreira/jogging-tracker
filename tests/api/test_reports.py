@@ -28,8 +28,8 @@ class TestActivities(TestCase):
         for i, user in enumerate(users):
             for j in range(1, 30):
                 Activity.objects.create(
-                    date="2020-01-{:02d}".format(j),
-                    time="00:01:00",
+                    date=datetime.date(2020, 1, j),
+                    time=datetime.time(0, 1, 0),
                     distance=10 * (i + 1),
                     duration=datetime.timedelta(minutes=(i + 1)),
                     user=user,

@@ -15,7 +15,7 @@ Write a REST API that tracks jogging times of users
 - All API calls must be authenticated.
 - Implement at least three roles with different permission levels: a regular user would only be able to CRUD on their owned records, a user manager would be able to CRUD only users, and an admin would be able to CRUD all records and users.
 - Each time entry when entered has a date, distance, time, and location.
-- Based on the provided date and location, API should connect to a weather API provider and get the weather conditions for the run, and store that with each run.
+- Based on the provided date and location, API should connect to a weather API provider and get the weather conditions for the run, and store that with each run. **see dev notes**
 - The API must create a report on average speed & distance per week.
 - The API must be able to return data in the JSON format.
 - The API should provide filter capabilities for all endpoints that return a list of elements, as well should be able to support pagination.
@@ -92,13 +92,14 @@ Integration tests: `pytest tests_integration`
 
 ## Dev notes
 
-1. Could be using GIS on Spacial context (Activity coordinates), but there is just too much complexity for this exercise.
+1. The Weather provider needs a PRO account in order to provide historical data. Currently, this code is harcoded to request current weather only.
+2. Could be using GIS on Spacial context (Activity coordinates), but there is just too much complexity for this exercise.
    1. must use geo-django
    2. postgresql must support postgis
    3. tests must start using SpaciaLite (dev system dependency outside python env)
    4. must install extra packages on Docker container
    5. more complexity
-2. Requests to external API should be handled assyncronously when possible.
+3. Requests to external API should be handled assyncronously when possible.
    1. An external request is slow
    2. an external API service may be temporarily down, have performance issues, change the API
    3. for non-critical data (such as the weather), it could be async-fetched 

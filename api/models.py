@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum
 from typing import Optional
 
@@ -50,22 +51,21 @@ class Activity(models.Model):
         return "{}: {} - {}".format(self.user, self.date, self.distance)
 
     def save(self, *args, **kwargs):
-        if self.pk is None and hasattr(self, "latitude") and hasattr(self, "longitude"):
-            # on create, get weather
+        if (
+            hasattr(self, "latitude")
+            and hasattr(self, "longitude")
+            and hasattr(self, "date")
+            and hasattr(self, "time")
+        ):
+            when = datetime.datetime.combine(self.date, self.time)
+
             weather_dict = WeatherProvider().getWeather(
-                float(self.latitude), float(self.longitude)
+                float(self.latitude), float(self.longitude), when=when
             )
             weather = (
                 None if weather_dict is None else Weather.get_or_create(**weather_dict)
             )
             self.weather = weather
-
-        elif "form" in kwargs and (
-            "latitude" in kwargs["form"].changed_data
-            or "longitude" in kwargs["form"].changed_data
-        ):
-            # if updating lat/lon, the weather info is not valid anymore
-            self.weather = None
 
         super(Activity, self).save(*args, **kwargs)
 
